@@ -17,7 +17,7 @@ from oss4x_app.src.log_activity import log_landing
 from oss4x_app.src.routers import api, ui
 from oss4x_app.src.templates import render_template
 
-_ENV_TEST_MODE = "OSS4x_TEST_MODE"
+_ENV_TEST_MODE = "OSS4X_TEST_MODE"
 
 
 def mark_test_mode():
