@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12, <3.14"
 resolution-markers = [
     "sys_platform == 'win32'",
@@ -1814,8 +1814,8 @@ name = "secretstorage"
 version = "3.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cryptography", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
-    { name = "jeepney", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
+    { name = "cryptography" },
+    { name = "jeepney" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1c/03/e834bcd866f2f8a49a85eaff47340affa3bfa391ee9912a952a1faa68c7b/secretstorage-3.5.0.tar.gz", hash = "sha256:f04b8e4689cbce351744d5537bf6b1329c6fc68f91fa666f60a380edddcd11be", size = 19884, upload-time = "2025-11-23T19:02:53.191Z" }
 wheels = [
@@ -1987,15 +1987,15 @@ wheels = [
 
 [[package]]
 name = "typesense"
-version = "2.0.0"
+version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/69/92/ca06da7ad7e771804fe21fdcfbc99d24079bedb9ab0ceaedac7ea1001263/typesense-2.0.0.tar.gz", hash = "sha256:9a306e328bf0c0030679c154730ec142efbf07fd0c33845b3efae10291e983e7", size = 79292, upload-time = "2026-02-16T16:37:56.647Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/25/5e582ea98ffe6df71e9db8c4288a9bc9179efbace1d49a371e716ffd93f1/typesense-2.1.1.tar.gz", hash = "sha256:5d1fded865ecf9a9e564a4e6b8aa9229c34287e958dc3b16eec408376d142a42", size = 97341, upload-time = "2026-10-23T09:23:19.964Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/a5/a392604f3eeed45d3d72f8f10b45a80082a826338609e62187d9e3614001/typesense-2.0.0-py3-none-any.whl", hash = "sha256:7eecc672e4049f7b5777e1cf1e7900d2d1ae2d28a670eda6545b568d1cde1700", size = 140736, upload-time = "2026-02-16T16:37:55.256Z" },
+    { url = "https://files.pythonhosted.org/packages/38/22/d848100d45976e612865251f89607d941199003d24a622b8afc5b9503b88/typesense-2.1.1-py3-none-any.whl", hash = "sha256:e37f799be67cc3a948ac756826e0c2451882a61d37d4da6235a4a80c2436afd6", size = 160564, upload-time = "2026-10-23T09:23:18.461Z" },
 ]
 
 [[package]]
