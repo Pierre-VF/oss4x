@@ -36,6 +36,7 @@ packages = [
     "src/oss4x",
     "src/oss4x_scripts",
     "src/oss4x_app",
+    "src/oss4x_mcp",
 ]
 
 [build-system]
