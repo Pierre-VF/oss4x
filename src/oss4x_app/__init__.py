@@ -2,6 +2,7 @@ import os
 from contextlib import asynccontextmanager
 from datetime import datetime
 from importlib.metadata import version
+from typing import Optional
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -79,7 +80,7 @@ else:
 app = FastAPI(
     title="OSS4x",
     description="""
-A search engine for open-source code for any application
+A search engine for open-source code for climate applications
 """,
     version=version("oss4x"),
     lifespan=lifespan,
