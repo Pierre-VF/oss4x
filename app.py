@@ -1,7 +1,5 @@
 """
 FastAPI app to operate a search
-
-Note: heavily inspired from https://github.com/alexmolas/microsearch/
 """
 
 from uvicorn import run
