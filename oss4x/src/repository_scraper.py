@@ -73,7 +73,7 @@ class RepositoryScraper:
         """
         Extract platform name and repo path from a URL or path.
 
-        :param url: URL or path (e.g., "https://github.com/oss4climate/oss4climate" or "github.com/oss4climate/oss4climate")
+        :param url: URL or path (e.g., "https://github.com/oss4x/oss4x" or "github.com/oss4x/oss4x")
         :return: Tuple of (platform_name, repo_path)
         """
         url_lower = url.lower()
@@ -112,7 +112,7 @@ class RepositoryScraper:
         Get the repository ID in the format "host/repo_path".
 
         :param url: URL or path
-        :return: Repository ID (e.g., "github.com/oss4climate/oss4climate")
+        :return: Repository ID (e.g., "github.com/oss4x/oss4x")
         """
         platform, path = self._get_platform_from_url(url)
         host = url.split("://")[1].split("/")[0]
@@ -130,7 +130,7 @@ class RepositoryScraper:
         Get the organisation ID in the format "host/org_path".
 
         :param url: URL or path
-        :return: Organisation ID (e.g., "github.com/oss4climate")
+        :return: Organisation ID (e.g., "github.com/oss4x")
         """
         platform, path = self._get_platform_from_url(url)
         host = url.split("://")[1].split("/")[0]

@@ -5,7 +5,7 @@ Module containing methods to be run in scripts
 import subprocess
 from datetime import timedelta
 
-from oss4climate_scripts.src.config import (
+from oss4x.scripts.src.config import (
     FILE_INPUT_INDEX,
     FILE_INPUT_LISTINGS_INDEX,
     FILE_OUTPUT_SUMMARY_TOML,

@@ -8,7 +8,7 @@ from oss4x.src.database.projects import project_dataframe_loader
 # Full indexing of the files
 df: pd.DataFrame = project_dataframe_loader(FILE_OUTPUT_LISTING_FEATHER)
 
-df_light = df[df["url"] == "https://github.com/Pierre-VF/oss4climate"]
+df_light = df[df["url"] == "https://github.com/Pierre-VF/oss4x"]
 df_light["readme"] = df_light["readme"].apply(
     lambda x: x[:500].replace("\n", " ").replace(",", " ")
 )

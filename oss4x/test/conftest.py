@@ -21,7 +21,7 @@ def path_data_for_tests() -> Path:
 # Github fixtures
 @pytest.fixture
 def github_repo_url() -> str:
-    return "https://github.com/Pierre-VF/oss4climate"
+    return "https://github.com/Pierre-VF/oss4x"
 
 
 def github_repo_url_with_organisation() -> str:
@@ -30,7 +30,7 @@ def github_repo_url_with_organisation() -> str:
 
 @pytest.fixture
 def github_repo_url_2() -> str:
-    return "https://github.com/Pierre-VF/oss4climate2"
+    return "https://github.com/Pierre-VF/oss4x2"
 
 
 @pytest.fixture
@@ -81,10 +81,10 @@ def filled_database_engine():
         upsert_repository(
             session,
             {
-                "id": "github.com/Pierre-VF/oss4climate",
+                "id": "github.com/Pierre-VF/oss4x",
                 "organisation_id": "github.com/Pierre-VF",
-                "name": "oss4climate",
-                "url": "https://github.com/Pierre-VF/oss4climate",
+                "name": "oss4x",
+                "url": "https://github.com/Pierre-VF/oss4x",
                 "description": "A dummy repo for tests",
                 "readme": "# Title",
                 "last_scraped_at": now(),

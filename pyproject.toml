@@ -37,7 +37,6 @@ dependencies = [
 ]
 packages = [
     "oss4x",
-    "src/oss4climate_scripts",
 ]
 
 [build-system]
@@ -74,9 +73,9 @@ mcp = [
 
 # scripts
 [project.scripts]
-add = "oss4climate_scripts.cli:add"
-discover = "oss4climate_scripts.cli:discover"
-# download_data = "oss4climate_scripts.cli:download_data"
-format = "oss4climate_scripts.cli:format"
-generate_listing = "oss4climate_scripts.cli:generate_listing"
-publish = "oss4climate_scripts.cli:publish"
+add = "oss4x.scripts.cli:add"
+discover = "oss4x.scripts.cli:discover"
+# download_data = "oss4x.scripts.cli:download_data"
+format = "oss4x.scripts.cli:format"
+generate_listing = "oss4x.scripts.cli:generate_listing"
+publish = "oss4x.scripts.cli:publish"

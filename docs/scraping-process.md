@@ -1,6 +1,6 @@
 # Scraping Process
 
-This document describes the scraping pipeline for OSS4Climate repositories.
+This document describes the scraping pipeline for OSS4x repositories.
 
 ## Overview
 
@@ -38,7 +38,7 @@ Stores metadata about organisations/groups from Git hosting platforms.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `id` | string (PK) | Format: `"host/org_path"` (e.g., `"github.com/oss4climate"`) |
+| `id` | string (PK) | Format: `"host/org_path"` (e.g., `"github.com/oss4x"`) |
 | `name` | string | Organisation name |
 | `description` | string | Organisation description |
 | `url` | string | Organisation URL |
@@ -60,7 +60,7 @@ Stores metadata about individual repositories.
 
 | Column | Type | Description |
 |--------|------|-------------|
-| `id` | string (PK) | Format: `"host/repo_path"` (e.g., `"github.com/oss4climate/oss4climate"`) |
+| `id` | string (PK) | Format: `"host/repo_path"` (e.g., `"github.com/oss4x/oss4x"`) |
 | `organisation_id` | string (FK) | Reference to organisations.id |
 | `name` | string | Repository name |
 | `url` | string | Full repository URL |
@@ -91,7 +91,7 @@ Stores metadata about individual repositories.
 The repository database URL is configured via the `REPOS_DATABASE_URL` environment variable or config setting.
 
 - **Default**: `sqlite:///.data/repos.sqlite`
-- **PostgreSQL example**: `postgresql+psycopg2://user:pass@host:5432/oss4climate_repos`
+- **PostgreSQL example**: `postgresql+psycopg2://user:pass@host:5432/oss4x_repos`
 
 ### Refresh Interval and Cache Lifetime
 
@@ -184,7 +184,7 @@ scraper.run(
 ### From CLI (via scrape_all)
 
 ```python
-from oss4climate_scripts.scripts.repository_scraping import scrape_all
+from oss4x.scripts.scripts.repository_scraping import scrape_all
 
 scrape_all(
     target_output_file=None,  # defaults to FILE_OUTPUT_LISTING_FEATHER from app config

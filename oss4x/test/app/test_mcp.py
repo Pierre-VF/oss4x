@@ -14,7 +14,7 @@ async def test_list_tools(initialised_typesense_client):
         assert len(list_resources) >= 0
 
         r = await mcp_client.call_tool(
-            "read_project_details", {"url": "https://github.com/Pierre-VF/oss4climate"}
+            "read_project_details", {"url": "https://github.com/Pierre-VF/oss4x"}
         )
         # Check success of parsing
         ProjectDetails(**r.data.__dict__)
@@ -23,7 +23,7 @@ async def test_list_tools(initialised_typesense_client):
         rs_raw = await mcp_client.call_tool(
             "search_for_projects",
             {
-                "topic": "oss4climate",
+                "topic": "oss4x",
                 "user_objective": "just testing",
                 "n_max_results": n_max_results,
             },

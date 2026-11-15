@@ -1,5 +1,5 @@
 
-CLI_NAME := "oss4climate_scripts.cli"
+CLI_NAME := "oss4x.scripts.cli"
 
 .PHONY: install
 install:
@@ -40,7 +40,7 @@ test_with_coverage:
 
 .PHONY: seed_typesense
 seed_typesense:
-	uv run oss4climate/app/seed_typesense.py
+	uv run oss4x/app/seed_typesense.py
 
 
 # ----------------------------------------------------------------------------

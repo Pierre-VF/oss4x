@@ -1,7 +1,7 @@
 import os
 from ftplib import FTP
 
-from oss4climate_scripts.src.config import (
+from oss4x.scripts.src.config import (
     FILE_OUTPUT_SUMMARY_TOML,
 )
 from oss4x.src.config import (

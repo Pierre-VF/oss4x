@@ -42,26 +42,24 @@ class TestGetPlatformFromURL:
     def test_github_https(self):
         scraper = RepositoryScraper()
         platform, path = scraper._get_platform_from_url(
-            "https://github.com/oss4climate/oss4climate"
+            "https://github.com/oss4x/oss4x"
         )
         assert platform == "github"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_github_http(self):
         scraper = RepositoryScraper()
-        platform, path = scraper._get_platform_from_url(
-            "http://github.com/oss4climate/oss4climate"
-        )
+        platform, path = scraper._get_platform_from_url("http://github.com/oss4x/oss4x")
         assert platform == "github"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_github_lowercase(self):
         scraper = RepositoryScraper()
         platform, path = scraper._get_platform_from_url(
-            "https://GITHUB.COM/oss4climate/oss4climate"
+            "https://GITHUB.COM/oss4x/oss4x"
         )
         assert platform == "github"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_gitlab_com(self):
         scraper = RepositoryScraper()
@@ -82,18 +80,18 @@ class TestGetPlatformFromURL:
     def test_codeberg(self):
         scraper = RepositoryScraper()
         platform, path = scraper._get_platform_from_url(
-            "https://codeberg.org/oss4climate/oss4climate"
+            "https://codeberg.org/oss4x/oss4x"
         )
         assert platform == "codeberg"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_bitbucket(self):
         scraper = RepositoryScraper()
         platform, path = scraper._get_platform_from_url(
-            "https://bitbucket.org/oss4climate/oss4climate"
+            "https://bitbucket.org/oss4x/oss4x"
         )
         assert platform == "bitbucket"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_unknown_platform(self):
         scraper = RepositoryScraper()
@@ -107,8 +105,8 @@ class TestGetRepoID:
 
     def test_github_repo_id(self):
         scraper = RepositoryScraper()
-        repo_id = scraper._get_repo_id("https://github.com/oss4climate/oss4climate")
-        assert repo_id == "github.com/oss4climate/oss4climate"
+        repo_id = scraper._get_repo_id("https://github.com/oss4x/oss4x")
+        assert repo_id == "github.com/oss4x/oss4x"
 
     def test_gitlab_repo_id(self):
         scraper = RepositoryScraper()
@@ -125,15 +123,15 @@ class TestGetRepoID:
 
     def test_codeberg_repo_id(self):
         scraper = RepositoryScraper()
-        repo_id = scraper._get_repo_id("https://codeberg.org/oss4climate/oss4climate")
+        repo_id = scraper._get_repo_id("https://codeberg.org/oss4x/oss4x")
         # Codeberg uses .com in repo_id
-        assert repo_id == "codeberg.org/oss4climate/oss4climate"
+        assert repo_id == "codeberg.org/oss4x/oss4x"
 
     def test_bitbucket_repo_id(self):
         scraper = RepositoryScraper()
-        repo_id = scraper._get_repo_id("https://bitbucket.org/oss4climate/oss4climate")
+        repo_id = scraper._get_repo_id("https://bitbucket.org/oss4x/oss4x")
         # Bitbucket uses .com in repo_id
-        assert repo_id == "bitbucket.org/oss4climate/oss4climate"
+        assert repo_id == "bitbucket.org/oss4x/oss4x"
 
 
 class TestGetOrgID:
@@ -141,13 +139,13 @@ class TestGetOrgID:
 
     def test_github_org_id(self):
         scraper = RepositoryScraper()
-        org_id = scraper._get_org_id("https://github.com/oss4climate")
-        assert org_id == "github.com/oss4climate"
+        org_id = scraper._get_org_id("https://github.com/oss4x")
+        assert org_id == "github.com/oss4x"
 
     def test_github_org_id_with_path(self):
         scraper = RepositoryScraper()
-        org_id = scraper._get_org_id("https://github.com/oss4climate/something")
-        assert org_id == "github.com/oss4climate"
+        org_id = scraper._get_org_id("https://github.com/oss4x/something")
+        assert org_id == "github.com/oss4x"
 
     def test_gitlab_org_id(self):
         scraper = RepositoryScraper()
@@ -163,13 +161,13 @@ class TestGetOrgID:
 
     def test_codeberg_org_id(self):
         scraper = RepositoryScraper()
-        org_id = scraper._get_org_id("https://codeberg.org/oss4climate")
-        assert org_id == "codeberg.org/oss4climate"
+        org_id = scraper._get_org_id("https://codeberg.org/oss4x")
+        assert org_id == "codeberg.org/oss4x"
 
     def test_bitbucket_org_id(self):
         scraper = RepositoryScraper()
-        org_id = scraper._get_org_id("https://bitbucket.org/oss4climate")
-        assert org_id == "bitbucket.org/oss4climate"
+        org_id = scraper._get_org_id("https://bitbucket.org/oss4x")
+        assert org_id == "bitbucket.org/oss4x"
 
 
 class TestExtractHostAndPath:
@@ -177,11 +175,9 @@ class TestExtractHostAndPath:
 
     def test_github(self):
         scraper = RepositoryScraper()
-        host, path = scraper._extract_host_and_path(
-            "https://github.com/oss4climate/oss4climate"
-        )
+        host, path = scraper._extract_host_and_path("https://github.com/oss4x/oss4x")
         assert host == "github.com"
-        assert path == "oss4climate/oss4climate"
+        assert path == "oss4x/oss4x"
 
     def test_gitlab_self_hosted(self):
         scraper = RepositoryScraper()
@@ -193,9 +189,9 @@ class TestExtractHostAndPath:
 
     def test_no_protocol(self):
         scraper = RepositoryScraper()
-        host, path = scraper._extract_host_and_path("github.com/oss4climate")
+        host, path = scraper._extract_host_and_path("github.com/oss4x")
         assert host == "github.com"
-        assert path == "oss4climate"
+        assert path == "oss4x"
 
 
 # ---------------------------------------------------------------------------

@@ -6,7 +6,7 @@ import os
 
 from tqdm import tqdm
 
-from oss4climate_scripts.src.config import (
+from oss4x.scripts.src.config import (
     FILE_INPUT_INDEX,
 )
 from oss4x.src.database.projects import project_dataframe_loader

@@ -1,18 +1,22 @@
+from oss4x.scripts import cli
+from oss4x.scripts.scripts import (
+    data_publication,
+    discover_new_sources,
+    discover_projects,
+    misc,
+)
+
+
 def test_import():
     # The most basic test to at least ensure that all dependencies imported work out
 
-    import oss4climate_scripts
-    from oss4climate_scripts import cli, scripts
-    from oss4climate_scripts.scripts import (
-        data_publication,
-        discover_new_sources,
-        discover_projects,
-        misc,
+    from oss4x.scripts import scripts
+    from oss4x.scripts.scripts import (
         repository_scraping,
     )
 
     # Package
-    assert isinstance(oss4climate_scripts.__name__, str)
+    assert isinstance(scripts.__name__, str)
 
     # Sub-packages
     assert isinstance(cli.__name__, str)
