@@ -1,5 +1,6 @@
 import pytest
-from oss4x.src.parsers.git_platforms.bitbucket_io import BitbucketScraper
+
+from oss4climate.src.parsers.git_platforms.bitbucket_io import BitbucketScraper
 
 
 @pytest.fixture

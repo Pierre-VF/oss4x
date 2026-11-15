@@ -1,6 +1,6 @@
 # Listing of open-source for climate and energy applications
 
-TLDR; if you're just looking for the search engine, you will find it here: https://oss4x.apps.pierrevf.com/ .
+TLDR; if you're just looking for the search engine, you will find it here: https://oss4climate.apps.pierrevf.com/ .
 
 **WARNING: the project is in active development and still an initial stage, therefore the structure may change without prior notice. If you depend on the code as a dependency to your application, please ensure to pin the specific commits in all your usages.**
 
@@ -17,11 +17,11 @@ The vision is that this project should provide a list of open-source software fo
 
 All of this should be provided in a way that makes it easy to search and interface to (e.g. with a structured machine-readable registry).
 
-However, in the current stage it is indeed not providing all of these features yet. Help is appreciated to get there (see [open issues](https://github.com/Pierre-VF/oss4x/issues)).
+However, in the current stage it is indeed not providing all of these features yet. Help is appreciated to get there (see [open issues](https://github.com/Pierre-VF/oss4climate/issues)).
 
 ## Do you just want to carry out a search for open-source matching your needs?
 
-To carry out a search without installing anything, you can just use the **web-app** here: https://oss4x.apps.pierrevf.com/
+To carry out a search without installing anything, you can just use the **web-app** here: https://oss4climate.apps.pierrevf.com/
 
 ## What is the license of the code and the data?
 
@@ -36,7 +36,7 @@ Input to the discovery process are given in the files in the **indexes** folder 
 
 - the listings scraped are listed in **[listings.json](indexes/listings.json)** (if you are interested in project listings, you should check all URLs in this file)
 - repositories found in the listings and added manually are found in **[repositories.toml](indexes/repositories.toml)**
-- the associated scrapers in the folder **"src/oss4x/src/parsers"**
+- the associated scrapers in the folder **"src/oss4climate/src/parsers"**
 
 
 The following projects are credited as major contributors to the underlying dataset:
@@ -127,6 +127,6 @@ Note: the indexing is heavy and involves a series of web (and API) calls. A cach
 
 ## Need new features or found a bug?
 
-Please open an issue on the repository [here](https://github.com/Pierre-VF/oss4x/issues).
+Please open an issue on the repository [here](https://github.com/Pierre-VF/oss4climate/issues).
 
 If you have a use-case that you would like to develop based upon this, or need new features, please get in touch with [PierreVF UG](https://www.pierrevf.com/) for support.

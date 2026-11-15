@@ -33,10 +33,10 @@ dependencies = [
     "idna>=3.15",
 ]
 packages = [
-    "src/oss4x",
-    "src/oss4x_scripts",
-    "src/oss4x_app",
-    "src/oss4x_mcp",
+    "src/oss4climate",
+    "src/oss4climate_scripts",
+    "src/oss4climate_app",
+    "src/oss4climate_mcp",
 ]
 
 [build-system]

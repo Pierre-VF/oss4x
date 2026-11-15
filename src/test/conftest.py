@@ -12,7 +12,7 @@ def path_data_for_tests() -> Path:
 # Github fixtures
 @pytest.fixture
 def github_repo_url() -> str:
-    return "https://github.com/Pierre-VF/oss4x"
+    return "https://github.com/Pierre-VF/oss4climate"
 
 
 def github_repo_url_with_organisation() -> str:
@@ -21,7 +21,7 @@ def github_repo_url_with_organisation() -> str:
 
 @pytest.fixture
 def github_repo_url_2() -> str:
-    return "https://github.com/Pierre-VF/oss4x2"
+    return "https://github.com/Pierre-VF/oss4climate2"
 
 
 @pytest.fixture
