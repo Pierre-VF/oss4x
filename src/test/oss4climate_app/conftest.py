@@ -3,8 +3,8 @@ from pathlib import Path
 import pandas as pd
 import pytest
 import typesense
-from oss4climate.src.config import SETTINGS
-from oss4climate_app.src.search.typesense_io import (
+from oss4x.src.config import SETTINGS
+from oss4x_app.src.search.typesense_io import (
     index_data_in_typesense,
     reset_typesense_schema,
 )

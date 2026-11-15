@@ -5,9 +5,9 @@ import pytest
 def test_import():
     # The most basic test to at least ensure that all dependencies imported work out
 
-    import oss4climate_scripts
-    from oss4climate_scripts import cli, scripts
-    from oss4climate_scripts.scripts import (
+    import oss4x_scripts
+    from oss4x_scripts import cli, scripts
+    from oss4x_scripts.scripts import (
         data_publication,
         discover_new_sources,
         discover_projects,
@@ -16,7 +16,7 @@ def test_import():
     )
 
     # Package
-    assert isinstance(oss4climate_scripts.__name__, str)
+    assert isinstance(oss4x_scripts.__name__, str)
 
     # Sub-packages
     assert isinstance(cli.__name__, str)

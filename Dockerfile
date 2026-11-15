@@ -14,7 +14,7 @@ RUN update-ca-certificates
 # Limit to relevant groups
 RUN uv sync --group test --group app
 # Run app
-LABEL organisation="oss4climate"
+LABEL organisation="oss4x"
 EXPOSE 8080
 ENV UV_LOCKED=1
 CMD ["uv", "run", "gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8080", "app:app"]

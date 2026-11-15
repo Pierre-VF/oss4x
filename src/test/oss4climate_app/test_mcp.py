@@ -1,6 +1,6 @@
 import pytest
 from fastmcp.client import Client
-from oss4climate_app.src.mcp_server import ProjectDetails, mcp
+from oss4x_app.src.mcp_server import ProjectDetails, mcp
 
 
 @pytest.mark.asyncio
@@ -13,7 +13,7 @@ async def test_list_tools():
         assert len(list_resources) >= 0
 
         r = await mcp_client.call_tool(
-            "read_project_details", {"url": "https://github.com/Pierre-VF/oss4climate"}
+            "read_project_details", {"url": "https://github.com/Pierre-VF/oss4x"}
         )
         # Check success of parsing
         ProjectDetails(**r.data.__dict__)
@@ -22,7 +22,7 @@ async def test_list_tools():
         rs_raw = await mcp_client.call_tool(
             "search_for_projects",
             {
-                "topic": "oss4climate",
+                "topic": "oss4x",
                 "user_objective": "just testing",
                 "n_max_results": n_max_results,
             },
