@@ -7,7 +7,6 @@ from typing import Optional
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-
 from oss4x.src.config import SETTINGS
 from oss4x.src.log import log_info
 from oss4x_app.src import mcp_server
@@ -17,7 +16,7 @@ from oss4x_app.src.log_activity import log_landing
 from oss4x_app.src.routers import api, ui
 from oss4x_app.src.templates import render_template
 
-_ENV_TEST_MODE = "OSS4x_TEST_MODE"
+_ENV_TEST_MODE = "OSS4CLIMATE_TEST_MODE"
 
 
 def mark_test_mode():
@@ -78,7 +77,7 @@ else:
 
 
 app = FastAPI(
-    title="OSS4x",
+    title="OSS4climate",
     description="""
 A search engine for open-source code for climate applications
 """,

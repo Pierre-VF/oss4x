@@ -1,12 +1,12 @@
 """
-Theme configuration for the OSS4x frontend.
+Theme configuration for the OSS4Climate frontend.
 
 This module provides a centralized configuration for all design colors and theme settings.
 The CSS uses these values through Jinja2 templating to generate CSS variables.
 """
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Dict, Any
 
 
 @dataclass
@@ -191,7 +191,7 @@ class Theme:
 
         return "\n".join(variables)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         Convert the theme configuration to a dictionary.
 
