@@ -42,10 +42,10 @@ def publish_to_ftp() -> None:
         passwd=SETTINGS.EXPORT_FTP_PASSWORD,
     ) as ftp:
         try:
-            ftp.mkd("oss4climate")
+            ftp.mkd("oss4x")
         except:
             pass
-        ftp.cwd("oss4climate")
+        ftp.cwd("oss4x")
         for i in files_out:
             with open(i, "rb") as fp:
                 log_info(f"Uploading {i}")
