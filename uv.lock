@@ -1123,7 +1123,7 @@ wheels = [
 
 [[package]]
 name = "oss4x"
-version = "0.8.2"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "authlib" },
