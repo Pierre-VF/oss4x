@@ -5,47 +5,25 @@ CLI_NAME := "oss4climate_scripts.cli"
 install:
 	uv sync --all-groups
 
-.PHONY: add
-add:
-	uv run typer $(CLI_NAME) run add
 
 .PHONY: build
 build:
 	uv lock
+
+
+.PHONY: cleanup
+cleanup:
+	# Convenience alias
+	make code_cleanup
 
 .PHONY: code_cleanup
 code_cleanup:
 	uv tool run pre-commit install
 	uv tool run pre-commit run --all
 
-.PHONY: discover
-discover:
-	uv run typer $(CLI_NAME) run discover
-
-.PHONY: generate_listing
-generate_listing:
-	# Note: typer processes "_" as "-"
-	uv run typer $(CLI_NAME) run generate-listing
-
-.PHONY: publish
-publish:
-	uv run typer $(CLI_NAME) run publish
-
-.PHONY: search
-search:
-	uv run typer $(CLI_NAME) run search
-
-.PHONY: download_data
-download_data:
-	uv run typer $(CLI_NAME) run download-data
-
 .PHONY: run_app
 run_app:
-	uv run gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8080 app:app
-
-.PHONY: help
-help:
-	uv run typer $(CLI_NAME) run --help
+	uv run gunicorn -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app:app
 
 .PHONY: test
 test:
@@ -59,9 +37,10 @@ test_with_coverage:
 	uv run python -m http.server 9001 --directory htmlcov/
 
 # CLI entries
-cli_help:
-	uv run typer $(CLI_NAME) run --help
 
+.PHONY: seed_typesense
+seed_typesense:
+	uv run src/oss4climate_app/seed_typesense.py
 
 
 # ----------------------------------------------------------------------------

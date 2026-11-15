@@ -4,6 +4,7 @@ Module containing the UI code
 
 from datetime import date, timedelta
 from typing import Optional
+from urllib.parse import urlencode
 
 import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
@@ -17,7 +18,7 @@ from oss4climate_app.src.config import (
 )
 from oss4climate_app.src.data_io import (
     repository_index_characteristics_from_documents,
-    unique_license_categories,
+    unique_licence_categories,
 )
 from oss4climate_app.src.log_activity import log_search
 from oss4climate_app.src.routers import listing_credits_df
@@ -61,8 +62,8 @@ async def search(request: Request):
             "n_repositories_indexed": characteristics.n_repositories_indexed,
             "n_repositories_indexed_extended": characteristics.n_repositories_indexed_extended,
             "languages": characteristics.unique_languages,
-            "licenses": characteristics.unique_licenses,
-            "unique_license_categories": unique_license_categories(),
+            "licences": characteristics.unique_licences,
+            "unique_licence_categories": unique_licence_categories(),
             "free_text": "",
         },
     )
@@ -74,7 +75,7 @@ async def search_results(
     background_tasks: BackgroundTasks,
     query: Optional[str] = None,
     language: Optional[str] = None,
-    license_category: Optional[str] = None,
+    licence_category: Optional[str] = None,
     exclude_forks: Optional[bool] = None,
     exclude_inactive: Optional[bool] = None,
     extended_search: bool = False,  # Allows lower quality results
@@ -84,7 +85,7 @@ async def search_results(
     ts_client=Depends(typesense_io.generate_client),
 ):
     if query:
-        query = query.strip().lower()
+        query = query.strip()
     else:
         # Return all results
         query = "*"
@@ -101,18 +102,24 @@ async def search_results(
         results_per_page=n_results,
         page=page,
         languages=language,
-        license_category=license_category,
+        licence_category=licence_category,
         high_quality_only=(not extended_search),
     )
 
     n_total_found = r.total_results
     n_found = len(r.results)
+    total_pages = max(1, ((n_total_found - 1) // n_results) + 1)
+
+    # Build base query string (all params except offset) for pagination links
+    base_params = {k: v for k, v in request.query_params.items() if k != "offset"}
+    base_params = {k: v for k, v in base_params.items() if v is not None and v != ""}
+    base_query = urlencode(base_params)
 
     # TODO: make this neater (and remove the below)
     df_out = pd.DataFrame(
         [(i.__dict__ | {"last_commit": i.last_commit_as_date()}) for i in r.results]
     )
-    for i in ["description", "language", "license", "license_category"]:
+    for i in ["description", "language", "licence", "licence_category"]:
         if i not in df_out:
             df_out[i] = "?"
 
@@ -123,7 +130,7 @@ async def search_results(
         df_out = df_out[df_out["last_commit"] >= t_limit]
 
     # Filling the gaps for clean display
-    cols_to_clean = ["description", "language", "license"]
+    cols_to_clean = ["description", "language", "licence"]
     df_out.loc[:, cols_to_clean] = (
         df_out[cols_to_clean]
         .replace(
@@ -153,6 +160,10 @@ async def search_results(
             "n_total_found": n_total_found,
             "results": df_out,
             "query": query,
+            "page": page,
+            "n_results": n_results,
+            "total_pages": total_pages,
+            "base_query": base_query,
         },
     )
 

@@ -4,6 +4,7 @@ Module containing the API code
 Note: For now, only redirects
 """
 
+import secrets
 from importlib.metadata import version
 from typing import Optional
 
@@ -50,7 +51,7 @@ async def search(
     ts_client=Depends(typesense_io.generate_client),
 ) -> typesense_io.SearchResult:
     if query:
-        query = query.strip().lower()
+        query = query.strip()
     if query is None:
         query = " "  # TODO : find a better solution
     res = typesense_io.search_with_query(
@@ -88,7 +89,7 @@ def _permission_admin(key: Optional[str] = None):
         raise ForbiddenError(
             "Not allowed to refresh when passkey is not set",
         )
-    if key != SETTINGS.DATA_REFRESH_KEY:
+    if not secrets.compare_digest(key or "", SETTINGS.DATA_REFRESH_KEY):
         raise ForbiddenError(
             "You are not allowed to refresh the data (invalid key)",
         )
