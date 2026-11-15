@@ -8,6 +8,7 @@ from importlib.metadata import version
 
 from fastapi import BackgroundTasks, Depends, FastAPI, Request
 from fastapi.responses import PlainTextResponse, RedirectResponse
+
 from oss4x.src.config import SETTINGS
 from oss4x.src.log import log_info
 from oss4x_app.src.config import URL_CODE_REPOSITORY, URL_LISTING_FEATHER
@@ -28,7 +29,7 @@ class ForbiddenError(RuntimeError):
 
 
 app = FastAPI(
-    title="OSS4climate API",
+    title="OSS4x API",
     description="""
     API to access the oss4x service. Please note that this is currently an **experimental proof-of-concept**
     so that stability is not guaranteed and that any integration with it might therefore break in case of updates.
