@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 import pandas as pd
+
 from oss4x.src.log import log_info, log_warning
 from oss4x.src.models import EnumDocumentationFileType
 from oss4x.src.nlp import html_io, markdown_io, rst_io

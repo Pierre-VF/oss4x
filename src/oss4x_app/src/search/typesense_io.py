@@ -4,12 +4,13 @@ from enum import Enum
 import pandas as pd
 import typesense
 import typesense.exceptions
-from oss4x.src.config import SETTINGS
 from pydantic import BaseModel
 from tqdm import tqdm
 from typesense.types.document import (
     SearchParameters,
 )
+
+from oss4x.src.config import SETTINGS
 
 _TYPESENSE_EMBEDDING_MODEL = "ts/all-MiniLM-L12-v2"
 

@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 import typesense
+
 from oss4x.src.config import SETTINGS
 from oss4x_app.src.search.typesense_io import (
     index_data_in_typesense,

@@ -6,13 +6,14 @@ from datetime import timedelta
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
+from requests.exceptions import HTTPError
+
 from oss4x.src.log import log_info
 from oss4x.src.parsers import (
     ParsingTargets,
     cached_web_get_text,
     identify_parsing_targets,
 )
-from requests.exceptions import HTTPError
 
 
 def _web_get(

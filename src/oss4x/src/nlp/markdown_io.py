@@ -5,6 +5,7 @@ Module to manage markdown text
 import re
 
 from markdown import markdown
+
 from oss4x.src.nlp.html_io import html_to_search_plaintext
 
 

@@ -6,8 +6,9 @@ import pandas as pd
 from fastmcp import FastMCP
 from fastmcp.dependencies import Depends
 from fastmcp.exceptions import NotFoundError
-from oss4x_app.src.search import typesense_io
 from pydantic import BaseModel
+
+from oss4x_app.src.search import typesense_io
 
 # Create an MCP server
 mcp = FastMCP(

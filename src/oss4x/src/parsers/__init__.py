@@ -11,6 +11,8 @@ from typing import Any
 
 import pandas as pd
 import requests
+from tomlkit import document, dump
+
 from oss4x.src.database import load_from_database, save_to_database
 from oss4x.src.helpers import (
     cleaned_url,
@@ -21,7 +23,6 @@ from oss4x.src.log import log_info
 from oss4x.src.nlp.html_io import find_all_links_in_html
 from oss4x.src.nlp.markdown_io import find_all_links_in_markdown
 from oss4x.src.nlp.rst_io import RstParsingError, find_all_links_in_rst
-from tomlkit import document, dump
 
 
 class RateLimitError(RuntimeError):

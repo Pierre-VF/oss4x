@@ -4,10 +4,11 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import pandas as pd
+from tqdm import tqdm
+
 from oss4x.src.database.projects import project_dataframe_loader
 from oss4x.src.log import log_warning
 from oss4x.src.parsers.licenses import license_category_from_license_name
-from tqdm import tqdm
 
 
 def _lower_str(x: str, *args, **kwargs):

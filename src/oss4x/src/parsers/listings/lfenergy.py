@@ -6,6 +6,7 @@ from datetime import timedelta
 
 import yaml
 from bs4 import BeautifulSoup
+
 from oss4x.src.parsers import (
     ParsingTargets,
     cached_web_get_text,

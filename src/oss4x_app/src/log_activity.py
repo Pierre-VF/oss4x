@@ -5,6 +5,7 @@ Module for local logging and tracking of activity
 from datetime import UTC, datetime
 
 from fastapi import Request
+
 from oss4x_app.src.database import RequestLog, SearchLog, open_database_session
 
 

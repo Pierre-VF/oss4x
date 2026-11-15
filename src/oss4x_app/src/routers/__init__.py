@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 import pandas as pd
+
 from oss4x.src.parsers.licenses import (
     licence_url_from_license_name,
 )
