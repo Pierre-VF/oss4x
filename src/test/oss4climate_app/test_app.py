@@ -1,6 +1,5 @@
 import pytest
 from fastapi.testclient import TestClient
-
 from oss4x_app import app, mark_test_mode
 from oss4x_app.src.search import typesense_io
 

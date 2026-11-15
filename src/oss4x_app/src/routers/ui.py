@@ -7,7 +7,6 @@ from datetime import date, timedelta
 import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from fastapi.responses import HTMLResponse
-
 from oss4x_app.src.config import (
     FORCE_HTTPS,
     SETTINGS,

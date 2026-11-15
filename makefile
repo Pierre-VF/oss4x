@@ -18,11 +18,6 @@ code_cleanup:
 	uv tool run pre-commit install
 	uv tool run pre-commit run --all
 
-
-.PHONY: cleanup
-cleanup:
-	make code_cleanup
-
 .PHONY: discover
 discover:
 	uv run typer $(CLI_NAME) run discover
