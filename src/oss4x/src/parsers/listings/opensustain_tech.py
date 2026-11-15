@@ -5,7 +5,6 @@ Module parsing https://opensustain.tech/
 from datetime import timedelta
 
 from bs4 import BeautifulSoup
-
 from oss4x.src.parsers import (
     ParsingTargets,
     ResourceListing,

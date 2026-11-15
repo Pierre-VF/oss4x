@@ -1,7 +1,6 @@
 import re
 
 from bs4 import BeautifulSoup
-
 from oss4x.src.log import log_warning
 
 

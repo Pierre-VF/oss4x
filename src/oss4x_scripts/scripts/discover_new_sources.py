@@ -4,8 +4,6 @@ This module contains methods to discover new sources of code
 
 import os
 
-from tqdm import tqdm
-
 from oss4x.src.database.projects import project_dataframe_loader
 from oss4x.src.log import (
     log_info,
@@ -24,6 +22,7 @@ from oss4x_app.src.config import (
 from oss4x_scripts.src.config import (
     FILE_INPUT_INDEX,
 )
+from tqdm import tqdm
 
 
 def discover_repositories_in_existing_organisations(output_file: str) -> None:

@@ -7,9 +7,8 @@ from datetime import datetime
 from typing import Optional
 
 import pandas as pd
-from sqlmodel import Field, Session, SQLModel, create_engine
-
 from oss4x.src.config import SETTINGS
+from sqlmodel import Field, Session, SQLModel, create_engine
 
 
 # -------------------------------------------------------------------------------------

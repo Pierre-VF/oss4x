@@ -6,10 +6,9 @@ import json
 import os
 from datetime import UTC, datetime, timedelta
 
-from sqlmodel import Field, Session, SQLModel, create_engine, delete, select
-
 from oss4x.src.config import SETTINGS
 from oss4x.src.log import log_info
+from sqlmodel import Field, Session, SQLModel, create_engine, delete, select
 
 
 # -------------------------------------------------------------------------------------

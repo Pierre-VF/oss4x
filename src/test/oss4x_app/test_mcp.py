@@ -1,6 +1,5 @@
 import pytest
 from fastmcp.client import Client
-
 from oss4x_app.src.mcp_server import ProjectDetails, mcp
 
 

@@ -1,6 +1,5 @@
 import typesense
 import typesense.exceptions
-
 from oss4x.src.config import SETTINGS
 from oss4x_app.src.config import FILE_OUTPUT_LISTING_FEATHER
 

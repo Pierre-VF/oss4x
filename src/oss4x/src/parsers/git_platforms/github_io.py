@@ -13,7 +13,6 @@ from functools import lru_cache
 from typing import Any
 
 import requests
-
 from oss4x.src.config import SETTINGS
 from oss4x.src.helpers import get_key_of_maximum_value, url_base_matches_domain
 from oss4x.src.log import log_info

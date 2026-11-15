@@ -5,7 +5,6 @@ CLI module
 from datetime import timedelta
 
 import typer
-
 from oss4x_scripts import scripts
 from oss4x_scripts.scripts import (
     data_publication,
