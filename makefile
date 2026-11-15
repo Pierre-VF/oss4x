@@ -1,5 +1,5 @@
 
-CLI_NAME := "oss4climate_scripts.cli"
+CLI_NAME := "oss4x_scripts.cli"
 
 .PHONY: install
 install:
@@ -17,6 +17,11 @@ build:
 code_cleanup:
 	uv tool run pre-commit install
 	uv tool run pre-commit run --all
+
+
+.PHONY: cleanup
+cleanup:
+	make code_cleanup
 
 .PHONY: discover
 discover:

@@ -1,5 +1,5 @@
 [project]
-name = "oss4climate"
+name = "oss4x"
 version = "0.8.2"
 readme = "README.md"
 description = "Package to create listings of Open Source for Energy"
@@ -33,10 +33,9 @@ dependencies = [
     "idna>=3.15",
 ]
 packages = [
-    "src/oss4climate",
-    "src/oss4climate_scripts",
-    "src/oss4climate_app",
-    "src/oss4climate_mcp",
+    "src/oss4x",
+    "src/oss4x_scripts",
+    "src/oss4x_app",
 ]
 
 [build-system]
