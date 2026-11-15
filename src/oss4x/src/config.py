@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from typing import Optional
 from urllib.parse import urlsplit
 
 import pydantic_settings
@@ -9,8 +8,8 @@ from dotenv import load_dotenv
 
 class Settings(pydantic_settings.BaseSettings):
     # For scraping
-    GITHUB_API_TOKEN: Optional[str] = None
-    GITLAB_ACCESS_TOKEN: Optional[str] = None
+    GITHUB_API_TOKEN: str | None = None
+    GITLAB_ACCESS_TOKEN: str | None = None
     LOCAL_FOLDER: str = str(Path(__file__).parent.parent.parent.parent / ".data")
     SCRAPING_SQLITE_DB: str = "db.sqlite"
 
@@ -22,14 +21,14 @@ class Settings(pydantic_settings.BaseSettings):
     DATABASE_PORT: int | None = None
 
     # Identifiants of FTP for export (scripts only)
-    EXPORT_FTP_URL: Optional[str] = None
-    EXPORT_FTP_USER: Optional[str] = None
-    EXPORT_FTP_PASSWORD: Optional[str] = None
+    EXPORT_FTP_URL: str | None = None
+    EXPORT_FTP_USER: str | None = None
+    EXPORT_FTP_PASSWORD: str | None = None
     # App settings
-    DATA_REFRESH_KEY: Optional[str] = None
-    SENTRY_DSN_URL: Optional[str] = None
+    DATA_REFRESH_KEY: str | None = None
+    SENTRY_DSN_URL: str | None = None
     APP_URL_BASE: str = ""
-    APP_PROXY_PATH: Optional[str] = None
+    APP_PROXY_PATH: str | None = None
     APP_URL_FAVICON: str | None = None
 
     # Typesense settings
@@ -57,13 +56,11 @@ class Settings(pydantic_settings.BaseSettings):
         """
         url = urlsplit(self.TYPESENSE_HOST)
         if url.hostname in [None, ""]:
-            raise EnvironmentError("Hostname must be provided in TYPESENSE_HOST")
+            raise OSError("Hostname must be provided in TYPESENSE_HOST")
         if url.scheme in [None, ""]:
-            raise EnvironmentError(
-                "Scheme (http/https) must be provided in TYPESENSE_HOST"
-            )
+            raise OSError("Scheme (http/https) must be provided in TYPESENSE_HOST")
         if url.port in [None, ""]:
-            raise EnvironmentError("Port must be provided in TYPESENSE_HOST")
+            raise OSError("Port must be provided in TYPESENSE_HOST")
         return {
             "host": url.hostname,
             "port": url.port,
