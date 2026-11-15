@@ -1,13 +1,13 @@
 import os
 
-from oss4climate.src.log import log_info
 from oss4climate_scripts.src.config import FILE_OUTPUT_SUMMARY_TOML
+from oss4x.src.log import log_info
 
 
 def download_data():
     # Only triggered when actually needed (as it puts constraints on environment)
-    from oss4climate_app.src import data_io
-    from oss4climate_app.src.config import (
+    from oss4x.app.src import data_io
+    from oss4x.app.src.config import (
         FILE_OUTPUT_DIR,
         FILE_OUTPUT_LISTING_FEATHER,
         URL_LISTING_FEATHER,

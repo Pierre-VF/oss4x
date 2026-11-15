@@ -27,7 +27,7 @@ run_app:
 
 .PHONY: test
 test:
-	uv run pytest src/.
+	uv run pytest oss4x/test/.
 
 .PHONY: test_with_coverage
 test_with_coverage:
@@ -40,7 +40,7 @@ test_with_coverage:
 
 .PHONY: seed_typesense
 seed_typesense:
-	uv run src/oss4climate_app/seed_typesense.py
+	uv run oss4climate/app/seed_typesense.py
 
 
 # ----------------------------------------------------------------------------

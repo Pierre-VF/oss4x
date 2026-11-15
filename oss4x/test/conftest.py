@@ -1,0 +1,94 @@
+from pathlib import Path
+
+import pytest
+from sqlmodel import Session
+
+from oss4x.src.database import (
+    get_engine,
+)
+from oss4x.src.database.repos import (
+    upsert_repository,
+)
+from oss4x.src.helpers import now
+
+
+# Test data path
+@pytest.fixture(scope="session")
+def path_data_for_tests() -> Path:
+    return Path(__file__).parent / "data_for_tests"
+
+
+# Github fixtures
+@pytest.fixture
+def github_repo_url() -> str:
+    return "https://github.com/Pierre-VF/oss4climate"
+
+
+def github_repo_url_with_organisation() -> str:
+    return "https://github.com/DTUWindEnergy/WindEnergyToolbox"
+
+
+@pytest.fixture
+def github_repo_url_2() -> str:
+    return "https://github.com/Pierre-VF/oss4climate2"
+
+
+@pytest.fixture
+def github_organisation_url() -> str:
+    return "https://github.com/carbon-data-specification"
+
+
+@pytest.fixture
+def github_organisation_url_2() -> str:
+    return "https://github.com/carbon-data-specification2"
+
+
+# Gitlab fixtures
+@pytest.fixture
+def gitlab_repo_url() -> str:
+    return "https://gitlab.com/polito-edyce-prelude/predyce"
+
+
+@pytest.fixture
+def gitlab_repo_url_2() -> str:
+    return "https://gitlab.com/polito-edyce-prelude/predyce2"
+
+
+@pytest.fixture
+def gitlab_group_url() -> str:
+    return "https://gitlab.com/polito-edyce-prelude"
+
+
+@pytest.fixture
+def gitlab_group_url_2() -> str:
+    return "https://gitlab.com/polito-edyce-prelude2"
+
+
+@pytest.fixture
+def unknown_url() -> str:
+    return "https://badlab.com/"
+
+
+@pytest.fixture
+def unknown_url_2() -> str:
+    return "https://badlab.com/2"
+
+
+@pytest.fixture(scope="session")
+def filled_database_engine():
+    engine = get_engine()
+    with Session(engine) as session:
+        upsert_repository(
+            session,
+            {
+                "id": "github.com/Pierre-VF/oss4climate",
+                "organisation_id": "github.com/Pierre-VF",
+                "name": "oss4climate",
+                "url": "https://github.com/Pierre-VF/oss4climate",
+                "description": "A dummy repo for tests",
+                "readme": "# Title",
+                "last_scraped_at": now(),
+            },
+        )
+        session.commit()
+    yield engine
