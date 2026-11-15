@@ -4,6 +4,8 @@ This module contains methods to discover new sources of code
 
 import os
 
+from tqdm import tqdm
+
 from oss4climate.src.database.projects import project_dataframe_loader
 from oss4climate.src.log import (
     log_info,
@@ -16,11 +18,6 @@ from oss4climate.src.parsers import (
     url_qualifies,
 )
 from oss4climate.src.parsers.git_platforms.github_io import GithubScraper
-from oss4climate_app.src.config import (
-    FILE_OUTPUT_LISTING_FEATHER,
-)
-from tqdm import tqdm
-
 from oss4climate_scripts.src.config import (
     FILE_INPUT_INDEX,
 )
@@ -46,6 +43,11 @@ def discover_repositories_in_existing_organisations(output_file: str) -> None:
 
 
 def discover_repositories_in_existing_readmes(output_file: str) -> None:
+    # Importing locally as that's not an absolute file-level requirement (and the file isn't easily available anymore)
+    from oss4climate_app.src.config import (
+        FILE_OUTPUT_LISTING_FEATHER,
+    )
+
     log_info("Searching for relevant resource URLs in READMEs of known repositories")
     if not os.path.exists(FILE_OUTPUT_LISTING_FEATHER):
         raise RuntimeError(
@@ -66,7 +68,7 @@ def discover_repositories_in_existing_readmes(output_file: str) -> None:
                 elif readme_type == EnumDocumentationFileType.RESTRUCTURED_TEXT:
                     full_targets += fetch_all_project_urls_from_rst_str(r["readme"])
         except Exception as e:
-            print(f"Error with {r} // e={e}")
+            log_info(f"Error with {r} // e={e}")
 
     def _url_cleanup(x: str) -> str:
         x = x.split("?")[0]
@@ -88,9 +90,9 @@ def discover_repositories_in_existing_readmes(output_file: str) -> None:
     full_targets.unknown = {
         _url_cleanup(i) for i in full_targets.unknown if url_qualifies(i)
     }
-    full_targets.invalid = [
+    full_targets.invalid = {
         _url_cleanup(i) for i in full_targets.invalid if url_qualifies(i)
-    ]
+    }
 
     # Cleaning up and exporting to TOML file
     log_info("Cleaning up targets")

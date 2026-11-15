@@ -7,7 +7,7 @@ import pandas as pd
 
 def project_dataframe_loader(
     documents: pd.DataFrame | str | None, limit: int | None = None
-):
+) -> pd.DataFrame:
     """
     Load project data from DataFrame or Feather file
 
@@ -29,10 +29,10 @@ def project_dataframe_loader(
                 {
                     "id",
                     "name",
-                    "organisation",
+                    "organisation_id",
                     "url",
                     "website",
-                    "license",
+                    "licence",
                     "latest_update",
                     "language",
                     "last_commit",
@@ -51,7 +51,7 @@ def project_dataframe_loader(
             {
                 "description",
                 "language",
-                "license",
+                "licence",
                 readme_col,
                 description_col,
             }

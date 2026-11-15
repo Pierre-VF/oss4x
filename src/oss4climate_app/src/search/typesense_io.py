@@ -1,41 +1,46 @@
 from datetime import date, datetime
 from enum import Enum
 
+import httpx
+import numpy as np
 import pandas as pd
 import typesense
 import typesense.exceptions
 from pydantic import BaseModel
-from tqdm import tqdm
 from typesense.types.document import (
     SearchParameters,
 )
 
 from oss4climate.src.config import SETTINGS
+from oss4climate.src.helpers import split_list_in_list_of_batches
+from oss4climate.src.log import log_info, log_warning
 
 _TYPESENSE_EMBEDDING_MODEL = "ts/all-MiniLM-L12-v2"
 
 
 class ResultItem(BaseModel):
     name: str
-    organisation: str
-    license: str = "?"
+    organisation_id: str | None = None
+    licence: str = "?"
     description: str
     language: str | None = None
     url: str
     readme: str
-    last_commit_timestamp: int
-    is_fork: bool = False
+    last_commit_timestamp: int | None
+    is_fork: bool | None = None
 
-    def last_commit_as_date(self) -> date:
+    def last_commit_as_date(self) -> date | None:
+        if self.last_commit_timestamp is None:
+            return None
         return datetime.fromtimestamp(self.last_commit_timestamp).date()
 
-    # Remaining options: id;website;license_url;latest_update;all_languages;open_pull_requests;master_branch;is_fork;forked_from;readme_type
+    # Remaining options: id;website;licence_url;latest_update;all_languages;open_pull_requests;master_branch;is_fork;forked_from;readme_type
 
 
 _TYPESENSE_REPO_SCHEMA = {
     "name": "projects",
     "fields": [
-        {"name": "idx", "type": "int32"},
+        {"name": "idx", "type": "string"},
         {"name": "name", "type": "string"},
         {"name": "description", "type": "string"},
         {
@@ -46,7 +51,7 @@ _TYPESENSE_REPO_SCHEMA = {
                 "model_config": {"model_name": _TYPESENSE_EMBEDDING_MODEL},
             },
         },
-        {"name": "readme", "type": "string"},
+        {"name": "readme", "type": "string", "optional": True},
         {
             "name": "embedding_readme",
             "type": "float[]",
@@ -54,20 +59,22 @@ _TYPESENSE_REPO_SCHEMA = {
                 "from": ["readme"],
                 "model_config": {"model_name": _TYPESENSE_EMBEDDING_MODEL},
             },
+            "optional": True,
         },
-        {"name": "organisation", "type": "string", "facet": True},
-        {"name": "license", "type": "string", "facet": True},
-        {"name": "language", "type": "string", "facet": True},
-        {"name": "url", "type": "string"},
+        {"name": "organisation_id", "type": "string", "facet": True, "optional": True},
+        {"name": "licence", "type": "string", "facet": True, "optional": True},
+        {"name": "language", "type": "string", "facet": True, "optional": True},
+        {"name": "url", "type": "string", "optional": True},
         {
             "name": "last_commit_timestamp",
             "type": "int64",
+            "optional": True,
         },  # date is not supported by TypeSense
-        {"name": "is_fork", "type": "bool", "facet": True},
-        {"name": "high_quality", "type": "bool", "facet": True},
+        {"name": "is_fork", "type": "bool", "facet": True, "optional": True},
+        {"name": "high_quality", "type": "bool", "facet": True, "optional": True},
         # TODO : add hints from the README files (just need to compress key information well enough there)
     ],
-    "default_sorting_field": "idx",
+    # "default_sorting_field": "idx",
 }
 _TYPESENSE_REPO_SCHEMA_FIELDS = [
     i["name"]
@@ -89,13 +96,13 @@ def generate_client() -> typesense.Client:
 def reset_typesense_schema(ts_client: typesense.Client):
     # Delete the collection
     try:
-        print("First deleting all projects")
+        log_info("First deleting all projects")
         ts_client.collections["projects"].delete()
-        print("Delete completed")
+        log_info("Delete completed")
     except typesense.exceptions.ObjectNotFound:
-        print("No projects defined")
-    print(" ")
-    print("Then recreating collections")
+        log_info("No projects defined")
+    log_info(" ")
+    log_info("Then recreating collections")
     try:
         ts_client.collections.create(_TYPESENSE_REPO_SCHEMA)
 
@@ -103,29 +110,106 @@ def reset_typesense_schema(ts_client: typesense.Client):
         pass
 
 
-def _date_to_timestamp(x: date | None) -> int:
+def _date_to_timestamp(x: date | str | float | None) -> int | None:
     if x is None:
         return 0  # TODO: find a better placeholder
+    if isinstance(x, float):
+        try:
+            return int(x)
+        except ValueError:
+            return 0
+    if isinstance(x, str):
+        x = datetime.fromisoformat(x)
     return int(datetime(x.year, x.month, x.day).timestamp())
 
 
-def index_data_in_typesense(ts_client: typesense.Client, df: pd.DataFrame) -> None:
+def _boolean_fix(x):
+    if isinstance(x, bool | None):
+        return x
+    elif isinstance(x, int | float):
+        if x == 0:
+            return False
+        elif x == 1:
+            return True
+    return None
+
+
+def _to_native_python(obj) -> object:
+    """Recursively convert pandas/numpy NA and NaN to Python None."""
+
+    def _convert(v):
+        if pd.isna(v):
+            return None
+        if isinstance(v, (np.floating, np.integer)):
+            return int(v) if isinstance(v, np.integer) else float(v)
+        return v
+
+    if isinstance(obj, dict):
+        return {k: _convert(v) for k, v in obj.items()}
+    if isinstance(obj, list | tuple):
+        converted = [_convert(item) for item in obj]
+        return type(obj)(converted)  # preserve tuple type
+    return _convert(obj)
+
+
+def index_data_in_typesense(
+    ts_client: typesense.Client,
+    df: pd.DataFrame,
+    batch_size: int = 10,
+    tolerate_timeouts: bool = False,
+) -> None:
     if "high_quality" not in df.columns:
         df["high_quality"] = True
     if "last_commit_timestamp" not in df.columns:
         df["last_commit_timestamp"] = df["last_commit"].apply(_date_to_timestamp)
 
-    [
-        ts_client.collections["projects"].documents.import_(
-            [
-                {k: r[k] for k in _TYPESENSE_REPO_SCHEMA_FIELDS}
-                | {
-                    "readme": r["readme"][:3000]
-                }  # Cutting the readme for RAM preservation
-            ]
-        )
-        for __, r in tqdm(df.iterrows())
+    # Fix the booleans
+    df["is_fork"] = df["is_fork"].apply(_boolean_fix)
+    subset = ["description", "readme"]
+    if "last_scraped_at" in df.columns:
+        subset.append("last_scraped_at")
+    df = df.dropna(
+        subset=subset,
+        how="all",
+    )
+
+    # Only focus on repos that have data scraped
+    df = df[df["name"].apply(lambda x: isinstance(x, str) and len(x) > 0)]
+    df = df[df["last_commit_timestamp"].apply(lambda x: x > 0)]
+    log_info(f"Found {len(df)} points to index")
+
+    docs = [
+        _to_native_python({k: r.get(k) for k in _TYPESENSE_REPO_SCHEMA_FIELDS})
+        for __, r in df.iterrows()
     ]
+    full_res = []
+    n_retries = 3
+    n_fails = 0
+    for b in split_list_in_list_of_batches(docs, batch_size=batch_size):
+        for attempt_i in range(n_retries):  # Supporting 3 retries in case of timeout
+            try:
+                res = ts_client.collections["projects"].documents.import_(b)
+                if all([not i.get("success") for i in res]):
+                    raise ValueError(
+                        f"Failed to index data in Typesense : issue example {res[0]}"
+                    )
+                full_res += res
+                break
+            except httpx.ReadTimeout as e:
+                n_i = attempt_i + 1
+                log_warning(
+                    f"Timeout on indexing - trying again (attempt {attempt_i + 1})"
+                )
+                if n_i >= n_retries:
+                    if tolerate_timeouts:
+                        n_fails += batch_size
+                        break
+                    else:
+                        raise RuntimeError("Too many timeouts") from e
+
+    log_info(
+        f"Indexed {len([i for i in full_res if i.get('success')])} documents and failed on {n_fails + len([i for i in full_res if not i.get('success')])}"
+    )
 
 
 class SearchResult(BaseModel):
@@ -136,7 +220,7 @@ class SearchResult(BaseModel):
 
 def _search_kwargs(
     languages: list[str] | str | None = None,
-    license_category: str | None = None,
+    licence_category: str | None = None,
     high_quality_only: bool = True,
 ) -> dict[str, str]:
     kwargs_search = dict()
@@ -145,10 +229,10 @@ def _search_kwargs(
         if isinstance(languages, str):
             languages = [languages]
         filter_by.append(f"language: [{','.join(languages)}]")
-    if license_category not in [None, "*"]:
+    if licence_category not in [None, "*"]:
         # TODO: this needs to be better aligned with actual usages
-        licenses = license_category.split(",")
-        filter_by.append(f"license: [{','.join(licenses)}]")
+        licences = licence_category.split(",")
+        filter_by.append(f"licence: [{','.join(licences)}]")
     if high_quality_only:
         filter_by.append("high_quality := true")
 
@@ -168,9 +252,6 @@ def search_for_url(
         SearchParameters(
             q=url,
             query_by="url",
-            # For hybrid search
-            # rerank_hybrid_matches=True,
-            # vector_query="embedding_readme:([], k: 200)",  # Here, reduce the relevant fields
             # sort_by="idx:asc",
             exclude_fields=["embedding_description", "embedding_readme"],
             per_page=results_per_page,
@@ -190,37 +271,71 @@ def search_with_query(
     results_per_page: int = 50,
     page: int = 1,
     languages: list[str] | str | None = None,
-    license_category: str | None = None,
+    licence_category: str | None = None,
     high_quality_only: bool = True,
 ) -> SearchResult:
     if query is None:
-        query = " "  # TODO: make this better
+        query = " "
 
-    # Enable hybrid search only if used in settings
-    query_by = "name, organisation, description, readme"
-    if SETTINGS.ENABLE_HYBRID_SEARCH:
-        query_by = f"{query_by}, embedding_readme"
+    # Keyword search with field weights: name > organisation_id > description > readme.
+    # This ensures title matches rank highest, followed by organisation_id,
+    # then description, and finally the full readme text.
+    keyword_fields = "name, organisation_id, description, readme"
+    keyword_weights = [5, 4, 3, 2]
+    hybrid_params: dict[str, str | bool] = {}
+    use_hybrid = SETTINGS.ENABLE_HYBRID_SEARCH
+    if use_hybrid:
+        keyword_fields = f"{keyword_fields}, embedding_readme"
+        keyword_weights = [*keyword_weights, 1]
+        hybrid_params = {
+            "rerank_hybrid_matches": True,
+            "vector_query": "embedding_description:([], k: 100)",
+        }
 
     s_kwargs = _search_kwargs(
         languages=languages,
-        license_category=license_category,
+        licence_category=licence_category,
         high_quality_only=high_quality_only,
     )
 
-    r = ts_client.collections["projects"].documents.search(
-        SearchParameters(
-            q=query,
-            query_by=query_by,
-            # For hybrid search
-            # rerank_hybrid_matches=True,
-            # vector_query="embedding_readme:([], k: 200)",  # Here, reduce the relevant fields
-            # sort_by="idx:asc",
-            exclude_fields=["embedding_description", "embedding_readme"],
-            per_page=results_per_page,
-            page=page,
-            **s_kwargs,
+    try:
+        r = ts_client.collections["projects"].documents.search(
+            SearchParameters(
+                q=query,
+                query_by=keyword_fields,
+                query_by_weights=keyword_weights,
+                prefix=True,
+                typo_tolerance="true",
+                exclude_fields=["embedding_description", "embedding_readme"],
+                per_page=results_per_page,
+                page=page,
+                **s_kwargs,
+                **hybrid_params,
+            )
         )
-    )
+    except typesense.exceptions.RequestMalformed as e:
+        # Hybrid search failed (e.g. embeddings not yet generated).
+        # Fall back to keyword-only search.
+        if use_hybrid:
+            keyword_fields = "name, organisation_id, description, readme"
+            keyword_weights = [5, 4, 3, 2]
+            hybrid_params = {}
+            r = ts_client.collections["projects"].documents.search(
+                SearchParameters(
+                    q=query,
+                    query_by=keyword_fields,
+                    query_by_weights=keyword_weights,
+                    prefix=True,
+                    typo_tolerance="true",
+                    exclude_fields=["embedding_description", "embedding_readme"],
+                    per_page=results_per_page,
+                    page=page,
+                    **s_kwargs,
+                )
+            )
+        else:
+            raise RuntimeError("Failed Typesense query") from e
+
     return SearchResult(
         page=r["page"],
         total_results=r["found"],
@@ -229,9 +344,9 @@ def search_with_query(
 
 
 class CountableFieldsEnum(Enum):
-    license = "license"
+    licence = "licence"
     language = "language"
-    organisation = "organisation"
+    organisation = "organisation_id"
 
 
 def count_values(
@@ -267,8 +382,8 @@ def list_values(
 
 if __name__ == "__main__":
     ts_client = generate_client()
-    c1 = list_values(ts_client, CountableFieldsEnum.license)
+    c1 = list_values(ts_client, CountableFieldsEnum.licence)
     c2 = list_values(ts_client, CountableFieldsEnum.language)
 
     r = search_with_query(ts_client, "wind power")  # , languages="C++")
-    print(r)
+    log_info(r)

@@ -1,55 +1,84 @@
+from datetime import timedelta
+
+import pandas as pd
 import typesense
-import typesense.exceptions
 
 from oss4climate.src.config import SETTINGS
-from oss4climate_app.src.config import FILE_OUTPUT_LISTING_FEATHER
-
-client = typesense.Client(
-    {
-        "nodes": [SETTINGS.typesense_config],
-        "api_key": SETTINGS.TYPESENSE_API_KEY,
-        "connection_timeout_seconds": SETTINGS.TYPESENSE_CONNECTION_TIMEOUT,
-    }
-)
-
-print("Starting seeding of Typesense")
-
-# ==============================================================================
-# Seeding the search engine
-# ==============================================================================
-
-from oss4climate.src.database.projects import project_dataframe_loader
+from oss4climate.src.database import open_database_session
+from oss4climate.src.database.repos import get_repos_for_typesense
+from oss4climate.src.log import log_info
+from oss4climate.src.parsers.listings import opensustain_tech
 from oss4climate_app.src.search.typesense_io import (
     generate_client,
     index_data_in_typesense,
     reset_typesense_schema,
 )
 
-# Full indexing of the files
-df = project_dataframe_loader(FILE_OUTPUT_LISTING_FEATHER)
 
-# ==============================================================================
-# Mark the OSSTech repos
-# ==============================================================================
-from datetime import timedelta
+def seed(reset: bool = False):
+    client = typesense.Client(
+        {
+            "nodes": [SETTINGS.typesense_config],
+            "api_key": SETTINGS.TYPESENSE_API_KEY,
+            "connection_timeout_seconds": SETTINGS.TYPESENSE_CONNECTION_TIMEOUT,
+        }
+    )
 
-from oss4climate.src.parsers.listings import opensustain_tech
+    log_info("Starting seeding of Typesense")
 
-osst_targets = opensustain_tech.fetch_all_project_urls_from_opensustain_webpage(
-    cache_lifetime=timedelta(hours=6)
-)
+    # ==============================================================================
+    # Seeding the search engine
+    # ==============================================================================
 
-df["high_quality"] = df["url"].apply(lambda i: i in osst_targets)
+    # Load repos from database
+    with open_database_session() as session:
+        repo_dicts = get_repos_for_typesense(session)
 
-print(osst_targets)
+    # Convert to DataFrame (matching the expected schema from the old feather-based pipeline)
+    df = pd.DataFrame(repo_dicts)
+    # Remove all the ones that aren't properly scraped yet (proxy = name is not available)
+    df.dropna(subset=["name"])
+    # Then check for emptiness
+    if df.empty:
+        raise ValueError("No data to index")
 
-# ==============================================================================
-# Proceed with seeding
-# ==============================================================================
-ts_client = generate_client()
-reset_typesense_schema(ts_client)
-df["idx"] = df.index.to_series().astype(int)
+    # ==============================================================================
+    # Mark the OSSTech repos
+    # ==============================================================================
 
-index_data_in_typesense(ts_client, df)
+    osst_targets = opensustain_tech.fetch_all_project_urls_from_opensustain_webpage(
+        cache_lifetime=timedelta(hours=6)
+    )
+    df["high_quality"] = df["url"].apply(lambda i: i in osst_targets)
+    log_info(osst_targets)
 
-print("DONE")
+    # ==============================================================================
+    # Proceed with seeding
+    # ==============================================================================
+    ts_client = generate_client()
+    if reset:
+        reset_typesense_schema(ts_client)
+
+    index_data_in_typesense(
+        ts_client,
+        df.rename(columns={"id": "idx"}),
+        batch_size=3,
+        tolerate_timeouts=True,
+    )
+
+    log_info("DONE")
+
+
+def reset_and_seed():
+    seed(reset=True)
+
+
+if __name__ == "__main__":
+    yes_to_reset = input("Do you want to reset typesense? [yes/no] : ")
+    reset_all = yes_to_reset == "yes"
+    if reset_all:
+        print("Typesense will be RESET")
+    else:
+        print("Typesense will NOT be reset")
+
+    seed(reset=reset_all)

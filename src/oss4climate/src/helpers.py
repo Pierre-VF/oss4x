@@ -2,13 +2,23 @@
 Module with convenience helper functions
 """
 
+from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urlparse
 
 import pandas as pd
 
 
-def sorted_list_of_unique_elements(x: list | pd.Series):
+def now() -> datetime:
+    """
+    Get current datetime in UTC timezone
+
+    :return: Current datetime with UTC timezone
+    """
+    return datetime.now(tz=UTC)
+
+
+def sorted_list_of_unique_elements(x: list | pd.Series) -> list:
     """
     Return a sorted list of unique elements from input
 
@@ -79,3 +89,8 @@ def get_key_of_maximum_value(x: dict[Any, float | int]) -> Any:
             max_value = v
             max_key = k
     return max_key
+
+
+def split_list_in_list_of_batches(x: list, batch_size: int):
+    for i in range(0, len(x), batch_size):
+        yield x[i : i + batch_size]

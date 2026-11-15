@@ -2,7 +2,7 @@
 Module containing methods to be run in scripts
 """
 
-import os
+import subprocess
 from datetime import timedelta
 
 from oss4climate.src.log import log_info
@@ -22,7 +22,6 @@ from oss4climate.src.parsers.listings.opensustain_tech import (
     fetch_all_project_urls_from_opensustain_webpage,
     fetch_listing_of_listings_from_opensustain_webpage,
 )
-
 from oss4climate_scripts.src.config import (
     FILE_INPUT_INDEX,
     FILE_INPUT_LISTINGS_INDEX,
@@ -31,12 +30,18 @@ from oss4climate_scripts.src.config import (
 
 
 def format_individual_file(file_path: str) -> None:
-    os.system(f"black {file_path}")
+    subprocess.run(["black", str(file_path)], check=True)
 
 
 def format_all_files():
-    format_individual_file(FILE_INPUT_INDEX)
-    format_individual_file(FILE_OUTPUT_SUMMARY_TOML)
+    try:
+        format_individual_file(FILE_INPUT_INDEX)
+    except Exception as e:
+        log_info(f"Failed to reprocess the index : {e}")
+    try:
+        format_individual_file(FILE_OUTPUT_SUMMARY_TOML)
+    except Exception as e:
+        log_info(f"Failed to reprocess the summary : {e}")
 
 
 def _add_projects_to_listing_file(
@@ -133,8 +138,8 @@ def update_listing_of_listings(
     list_of_listings += listings_open_sustain
     list_of_listings.ensure_sorted_cleaned_and_unique_elements()
 
-    # Fetch licenses
-    list_of_listings.fetch_all_licenses()
+    # Fetch licences
+    list_of_listings.fetch_all_licences()
     list_of_listings.fetch_all_target_counts()
 
     list_of_listings.to_json(target_output_file)

@@ -5,6 +5,7 @@ from urllib.parse import urlsplit
 
 import pydantic_settings
 from dotenv import load_dotenv
+from sqlalchemy.engine import URL
 
 
 class Settings(pydantic_settings.BaseSettings):
@@ -21,6 +22,9 @@ class Settings(pydantic_settings.BaseSettings):
     DATABASE_NAME: str | None = None
     DATABASE_PORT: int | None = None
 
+    # Repository database URL (SQLite or PostgreSQL)
+    REPOS_DATABASE_URL: str = "sqlite:///.data/repos.sqlite"
+
     # Identifiants of FTP for export (scripts only)
     EXPORT_FTP_URL: Optional[str] = None
     EXPORT_FTP_USER: Optional[str] = None
@@ -33,8 +37,8 @@ class Settings(pydantic_settings.BaseSettings):
     APP_URL_FAVICON: str | None = None
 
     # Typesense settings
-    TYPESENSE_API_KEY: str = ""
-    TYPESENSE_HOST: str = ""
+    TYPESENSE_API_KEY: str | None = None
+    TYPESENSE_HOST: str | None = None
     TYPESENSE_CONNECTION_TIMEOUT: int = 2
 
     # For data and usage analytics
@@ -92,7 +96,7 @@ class Settings(pydantic_settings.BaseSettings):
         return f"{self.LOCAL_FOLDER}/{self.SCRAPING_SQLITE_DB}"
 
     @property
-    def database_connection_string(self) -> str:
+    def database_connection_string(self) -> str | URL:
         """
         Get the full database connection string
 
@@ -105,8 +109,16 @@ class Settings(pydantic_settings.BaseSettings):
             self.DATABASE_PORT,
             self.DATABASE_NAME,
         }:
+            out = URL.create(
+                drivername="postgresql",
+                username=self.DATABASE_USERNAME,
+                password=self.DATABASE_PASSWORD,
+                host=self.DATABASE_HOST,
+                port=self.DATABASE_PORT,
+                database=self.DATABASE_NAME,
+            )
             # Postgres case
-            out = f"postgresql+psycopg2://{self.DATABASE_USERNAME}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
+            # out = f"://{}:{quote()}@{}:{}/{}"
         else:
             # Sqlite case
             out = f"{self.LOCAL_FOLDER}/{self.DATABASE_HOST}"

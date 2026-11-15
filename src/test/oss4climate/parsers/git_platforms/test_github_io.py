@@ -48,7 +48,6 @@ def test_parsing_target_set(
         unknown={unknown_url_2, unknown_url},
     )
     x += x
-    x.ensure_sorted_cleaned_and_unique_elements()
     assert x.github_organisations == {
         github_organisation_url,
         github_organisation_url_2,
@@ -67,5 +66,3 @@ def test_fetch_functions(github_repo_url, github_organisation_url):
 
     res_org = ghs.fetch_repositories_in_organisation(github_organisation_url)
     assert isinstance(res_org, dict)
-
-    print("ok")
