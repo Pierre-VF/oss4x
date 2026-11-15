@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import pandas as pd
 import typesense
 
@@ -12,7 +10,6 @@ from oss4x.src.config import SETTINGS
 from oss4x.src.database import open_database_session
 from oss4x.src.database.repos import get_repos_for_typesense
 from oss4x.src.log import log_info
-from oss4x.src.parsers.listings import opensustain_tech
 
 
 def seed(reset: bool = False):
@@ -43,14 +40,12 @@ def seed(reset: bool = False):
         raise ValueError("No data to index")
 
     # ==============================================================================
-    # Mark the OSSTech repos
+    # Mark the high quality repos
     # ==============================================================================
 
-    osst_targets = opensustain_tech.fetch_all_project_urls_from_opensustain_webpage(
-        cache_lifetime=timedelta(hours=6)
-    )
-    df["high_quality"] = df["url"].apply(lambda i: i in osst_targets)
-    log_info(osst_targets)
+    # high_quality_targets = []
+    df["high_quality"] = True  # df["url"].apply(lambda i: i in high_quality_targets)
+    # log_info(high_quality_targets)
 
     # ==============================================================================
     # Proceed with seeding

@@ -15,18 +15,8 @@ from oss4x.src.parsers import (
     ParsingTargets,
     ResourceListing,
     identify_parsing_targets,
-    listings,
 )
 from oss4x.src.parsers.git_platforms.github_io import GithubScraper
-from oss4x.src.parsers.listings.lfenergy import (
-    fetch_all_project_urls_from_lfe_webpage,
-    fetch_project_urls_from_lfe_energy_project_webpage,
-    get_open_source_energy_projects_from_landscape,
-)
-from oss4x.src.parsers.listings.opensustain_tech import (
-    fetch_all_project_urls_from_opensustain_webpage,
-    fetch_listing_of_listings_from_opensustain_webpage,
-)
 
 
 def format_individual_file(file_path: str) -> None:
@@ -80,24 +70,8 @@ def discover_projects(
     # From webpage
     new_targets = ParsingTargets()
     dropped_urls = []
-    rs0 = fetch_all_project_urls_from_lfe_webpage(cache_lifetime=cache_lifetime)
-    for r in rs0:
-        new_targets += fetch_project_urls_from_lfe_energy_project_webpage(
-            r, cache_lifetime=cache_lifetime
-        )
 
-    # From landscape
-    new_targets += get_open_source_energy_projects_from_landscape(
-        cache_lifetime=cache_lifetime
-    )
-
-    # Adding from OpenSustainTech
-    new_targets += fetch_all_project_urls_from_opensustain_webpage(
-        cache_lifetime=cache_lifetime
-    )
-
-    # From different listings
-    new_targets += listings.fetch_all(listings_file_path, cache_lifetime=cache_lifetime)
+    raise NotImplementedError("Add your discovery code here")
 
     [log_info(f"DROPPING {i} (target is unclear)") for i in dropped_urls]
 
@@ -133,9 +107,7 @@ def update_listing_of_listings(
     list_of_listings = ResourceListing.from_json(target_output_file)
 
     # Add data from listings of listings
-    listings_open_sustain = fetch_listing_of_listings_from_opensustain_webpage()
-
-    list_of_listings += listings_open_sustain
+    raise NotImplementedError("Add your discovery code here")
     list_of_listings.ensure_sorted_cleaned_and_unique_elements()
 
     # Fetch licences

@@ -36,12 +36,6 @@ test_with_coverage:
 	echo "Exposing on http://localhost:9001/"
 	uv run python -m http.server 9001 --directory htmlcov/
 
-# CLI entries
-
-.PHONY: seed_typesense
-seed_typesense:
-	uv run oss4x/app/seed_typesense.py
-
 
 # ----------------------------------------------------------------------------
 # Kept for legacy reasons (backwards compatibility)
