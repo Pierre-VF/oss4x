@@ -1,25 +1,5 @@
-IMPORTANT NOTE : beware that license of the content of this repository differs between
-source code (including documentation) and listing data.
-
-----------------------------------------------------------------------------------------
- LISTING DATA (content of the "indexes" folder)
-----------------------------------------------------------------------------------------
-
-Listing data may only be reused in a way that complies
-with the license of the listings (each entry in the "listings.json" is provided with its
-associated license). Some of them (e.g. OpenSustain) are licensed under Creative Common,
-which will require you to acknowledge the original source as well.
-
-While this may be seen as impractical, this is a necessary step to ensure that due
-credit is given to very work-intensive collection and curation of the listing datasets
-(OpenSustain has for example required over 3000 hours of research and curation).
-
-----------------------------------------------------------------------------------------
- SOURCE CODE (and associated documentation)
-----------------------------------------------------------------------------------------
-
 MIT License
-Copyright (c) 2024 Pierre V-F
+Copyright (c) 2026 Pierre V-F
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
