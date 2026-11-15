@@ -17,7 +17,7 @@ from oss4x.app.src.templates import render_template
 from oss4x.src.config import SETTINGS
 from oss4x.src.log import log_info
 
-_ENV_TEST_MODE = "OSS4CLIMATE_TEST_MODE"
+_ENV_TEST_MODE = "OSS4X_TEST_MODE"
 
 
 def mark_test_mode():

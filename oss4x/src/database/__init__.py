@@ -13,7 +13,7 @@ def _open_engine_and_create_database_if_missing():
         SETTINGS.database_connection_string,
         echo=False,
     )
-    # TODO : this currently also creates empty tables for the "oss4climate" part of the code,
+    # TODO : this currently also creates empty tables for the "oss4x" part of the code,
     #   this is likely avoidable and could be removed in a later version
     SQLModel.metadata.create_all(x)
     return x
