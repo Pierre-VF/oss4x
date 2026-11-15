@@ -49,11 +49,6 @@ jobs:
           git config user.name github_actions
           git config user.email github_actions@pierrevf.com
 
-      #- name: Generate requirements files for app
-      #  run: |
-      #    uv sync --group=app
-      #    uv pip freeze --exclude-editable > requirements-app.txt
-
       - name: Run code cleanup
         run: |
           make code_cleanup || echo "Precommits modified the files"
@@ -68,7 +63,7 @@ jobs:
 
       # Run and test
       - name: Installing packages
-        run: uv sync --group=app --group=test
+        run: uv sync --extra=app --extra=test
 
       # From https://typesense.org/docs/guide/github-actions.html
       - name: Start Typesense

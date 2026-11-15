@@ -3,7 +3,7 @@ CLI_NAME := "oss4x.scripts.cli"
 
 .PHONY: install
 install:
-	uv sync --all-groups
+	uv sync --all-extras
 
 
 .PHONY: build

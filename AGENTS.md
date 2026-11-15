@@ -2,7 +2,7 @@
 
 ## Setup commands
 
-- Install dependencies: `uv sync --all-groups`
+- Install dependencies: `uv sync --all-extras`
 - Running python script named `xxx.py` : `uv run xxx.py`
 - Run tests: `uv run pytest src/.`
 - Code cleanup and styling: `uv tool run pre-commit install && uv tool run pre-commit run --all`
