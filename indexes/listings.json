@@ -1,0 +1,18 @@
+{
+    "faults": {
+        "invalid_urls": [],
+        "urls": []
+    },
+    "github_hosted": {
+        "readme_listings": []
+    },
+    "gitlab_hosted": {
+        "readme_listings": []
+    },
+    "webpages": {
+        "html": [{"target_count": 0, "licence_url": "", "url": ""}]
+    },
+    "websites": {
+        "html": []
+    }
+}
