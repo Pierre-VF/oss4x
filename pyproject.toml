@@ -71,6 +71,13 @@ mcp = [
     "anthropic>=0.105.2"
 ]
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:SyncAnalyticsV1 is deprecated:DeprecationWarning",
+    "ignore:SyncOverrides is deprecated:DeprecationWarning",
+    "ignore:SyncSynonyms is deprecated:DeprecationWarning",
+]
+
 # scripts
 [project.scripts]
 add = "oss4x.scripts.cli:add"
