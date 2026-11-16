@@ -10,11 +10,24 @@ from fastapi.staticfiles import StaticFiles
 
 from oss4x.app.src import mcp_server
 from oss4x.app.src.app_config import AppConfig
-from oss4x.app.src.config import STATIC_FILES_PATH, set_current_config
+from oss4x.app.src.config import (
+    FILE_OUTPUT_LISTING_FEATHER,
+    STATIC_FILES_PATH,
+    set_current_config,
+)
 from oss4x.app.src.data_io import download_listing_data_for_app
 from oss4x.app.src.log_activity import log_landing
+from oss4x.app.src.mcp_server import mcp
 from oss4x.app.src.routers import api, ui
 from oss4x.app.src.templates import render_template
+from oss4x.app.src.theme import (
+    Theme,
+    ThemeColors,
+    ThemeShadows,
+    ThemeSpacing,
+    ThemeTransitions,
+    ThemeTypography,
+)
 from oss4x.src.config import SETTINGS as _DEFAULT_SETTINGS
 from oss4x.src.config import Settings
 from oss4x.src.log import log_info
@@ -171,3 +184,18 @@ A search engine for open-source code for any applications
     app.mount("/mcp", app=mcp_server.mcp.http_app(transport="sse"))
 
     return app
+
+
+# Convenience exposure
+__all__ = [
+    "FILE_OUTPUT_LISTING_FEATHER",
+    "Theme",
+    "ThemeColors",
+    "ThemeShadows",
+    "ThemeSpacing",
+    "ThemeTransitions",
+    "ThemeTypography",
+    "create_app",
+    "mark_test_mode",
+    "mcp",
+]
