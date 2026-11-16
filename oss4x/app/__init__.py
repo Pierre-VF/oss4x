@@ -70,15 +70,21 @@ def initialise_error_logging():
         log_info("Skipping error logging in Sentry")
 
 
-def create_app(app_config: AppConfig, settings: Settings | None = None) -> FastAPI:
+def create_app(
+    app_config: AppConfig,
+    settings: Settings | None = None,
+    load_dot_env_file: bool = False,
+) -> FastAPI:
     """
     Create and configure a FastAPI application for a specific deployment.
 
     :param app_config: The application configuration for this deployment
     :param settings: Infrastructure settings (defaults to the module-level Settings instance)
+    :param load_dot_env_file: If True, reloads (with override) the env from the .env file (False does nothing)
     :return: Configured FastAPI application
     """
-    load_dotenv(override=True)
+    if load_dot_env_file:
+        load_dotenv(override=True)
 
     if settings is None:
         settings = _DEFAULT_SETTINGS
