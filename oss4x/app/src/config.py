@@ -19,10 +19,6 @@ STATIC_FILES_PATH = _script_dir / "static"
 # To prevent caching between versions (this doesn't work too well across instances, but does the job for now)
 APP_VERSION = importlib.metadata.version("oss4x")
 
-# Computed from Settings (infrastructure)
-FILE_OUTPUT_DIR = _DEFAULT_SETTINGS.LOCAL_FOLDER
-FILE_OUTPUT_LISTING_FEATHER = f"{FILE_OUTPUT_DIR}/listing_data.feather"
-
 # Current config instances (set by create_app factory)
 APP_CONFIG: AppConfig | None = None
 SETTINGS: Settings | None = None
@@ -40,3 +36,18 @@ def get_app_config() -> AppConfig:
     if APP_CONFIG is None:
         raise RuntimeError("create_app() has not been called. APP_CONFIG is not set.")
     return APP_CONFIG
+
+
+def get_file_output_dir() -> str:
+    """Return the file output directory from the active settings.
+
+    Computed lazily so it reflects the Settings instance passed to create_app(),
+    falling back to the default settings when no app has been created yet.
+    """
+    settings = SETTINGS if SETTINGS is not None else _DEFAULT_SETTINGS
+    return settings.LOCAL_FOLDER
+
+
+def get_file_output_listing_feather() -> str:
+    """Return the path to the listing data feather file."""
+    return f"{get_file_output_dir()}/listing_data.feather"

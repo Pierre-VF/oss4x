@@ -17,7 +17,7 @@ def publish_to_ftp() -> None:
     """
     # This should only be needed when publishing to FTP (as it's a side feature)
     from oss4x.app.src.app_config import AppConfig
-    from oss4x.app.src.config import FILE_OUTPUT_LISTING_FEATHER
+    from oss4x.app.src.config import get_file_output_listing_feather
 
     app_config = AppConfig()
 
@@ -32,7 +32,7 @@ def publish_to_ftp() -> None:
             raise OSError(f"{v} must have an adequate value for FTP export to work")
     files_out = [
         FILE_OUTPUT_SUMMARY_TOML,
-        FILE_OUTPUT_LISTING_FEATHER,
+        get_file_output_listing_feather(),
         app_config.FILE_INPUT_LISTINGS_INDEX,
     ]
 

@@ -6,8 +6,8 @@ from urllib.request import urlretrieve
 
 from oss4x.app.src import config
 from oss4x.app.src.config import (
-    FILE_OUTPUT_DIR,
-    FILE_OUTPUT_LISTING_FEATHER,
+    get_file_output_dir,
+    get_file_output_listing_feather,
 )
 from oss4x.app.src.search import typesense_io
 from oss4x.src.helpers import sorted_list_of_unique_elements
@@ -28,7 +28,7 @@ def download_listing_data_for_app(
     load_feather_listing: bool = False,
 ):
     app_config = config.get_app_config()
-    os.makedirs(FILE_OUTPUT_DIR, exist_ok=True)
+    os.makedirs(get_file_output_dir(), exist_ok=True)
     download_file(
         app_config.URL_LISTINGS_INDEX,
         app_config.FILE_INPUT_LISTINGS_INDEX,
@@ -39,7 +39,7 @@ def download_listing_data_for_app(
             raise RuntimeError("Listing target not set up")
         download_file(
             app_config.URL_LISTING_FEATHER,
-            FILE_OUTPUT_LISTING_FEATHER,
+            get_file_output_listing_feather(),
             force_refresh=force_refresh,
         )
     log_info("Download complete")

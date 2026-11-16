@@ -11,7 +11,6 @@ from fastapi.staticfiles import StaticFiles
 from oss4x.app.src import config, mcp_server
 from oss4x.app.src.app_config import AppConfig
 from oss4x.app.src.config import (
-    FILE_OUTPUT_LISTING_FEATHER,
     STATIC_FILES_PATH,
     set_current_config,
 )
@@ -118,10 +117,6 @@ A search engine for open-source code for any applications
         **kwargs,
     )
 
-    # Store config on app.state for route handlers
-    app.state.app_config = app_config
-    app.state.settings = settings
-
     def get_top_urls(scores_dict: dict, n: int):
         sorted_urls = sorted(scores_dict.items(), key=lambda x: x[1], reverse=True)
         top_n_urls = sorted_urls[:n]
@@ -187,7 +182,6 @@ A search engine for open-source code for any applications
 
 # Convenience exposure
 __all__ = [
-    "FILE_OUTPUT_LISTING_FEATHER",
     "Theme",
     "ThemeColors",
     "ThemeShadows",

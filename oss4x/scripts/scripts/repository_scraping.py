@@ -32,7 +32,7 @@ def scrape_all(
     Uses the RepositoryScraper to sync from TOML, scrape active repos,
     and export results to database and files.
 
-    :param target_output_file: name of file to output results to, defaults to FILE_OUTPUT_LISTING_FEATHER
+    :param target_output_file: name of file to output results to, defaults to the listing feather path from app config
     :param fail_on_issue: if True, raises a failure if encountering an issue
     :param refresh_days: number of days since last scrape before re-scraping (default: 28)
     :raises ValueError: if output file type is not supported (CSV, JSON)
@@ -43,10 +43,10 @@ def scrape_all(
     if target_output_file is None:
         # This should only be needed when actually needed (as it's a side feature)
         from oss4x.app.src.config import (
-            FILE_OUTPUT_LISTING_FEATHER,
+            get_file_output_listing_feather,
         )
 
-        target_output_file = FILE_OUTPUT_LISTING_FEATHER
+        target_output_file = get_file_output_listing_feather()
 
     # Determine binary output path (feather)
     binary_target_output_file = target_output_file
