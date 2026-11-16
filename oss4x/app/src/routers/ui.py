@@ -9,12 +9,7 @@ import pandas as pd
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from fastapi.responses import HTMLResponse
 
-from oss4x.app.src.config import (
-    FORCE_HTTPS,
-    SETTINGS,
-    URL_CODE_REPOSITORY,
-    URL_FEEDBACK_FORM,
-)
+from oss4x.app.src import config
 from oss4x.app.src.data_io import (
     repository_index_characteristics_from_documents,
     unique_licence_categories,
@@ -32,16 +27,18 @@ def _render_ui_template(
     template_file: str,
     content: dict | None = None,
 ):
+    app_config = config.APP_CONFIG
+    settings = config.SETTINGS
     url = request.url.components
-    if FORCE_HTTPS:
+    if app_config.FORCE_HTTPS:
         canonical_url = f"https://{url.netloc}{url.path}"
     else:
         canonical_url = f"{url.scheme}://{url.netloc}{url.path}"
     resp = {
-        "UMAMI_SITE_ID": SETTINGS.UMAMI_SITE_ID if SETTINGS.UMAMI_SITE_ID else "",
-        "URL_CODE_REPOSITORY": URL_CODE_REPOSITORY,
-        "URL_FEEDBACK_FORM": URL_FEEDBACK_FORM,
-        "URL_BASE": SETTINGS.full_url_base,
+        "UMAMI_SITE_ID": settings.UMAMI_SITE_ID if settings.UMAMI_SITE_ID else "",
+        "URL_CODE_REPOSITORY": app_config.URL_CODE_REPOSITORY,
+        "URL_FEEDBACK_FORM": app_config.URL_FEEDBACK_FORM,
+        "URL_BASE": app_config.full_url_base,
         "APPLICATION_FIELD": "climate",
         "credits_df": listing_credits_df(),
         "canonical_url": canonical_url,

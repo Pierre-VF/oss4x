@@ -16,10 +16,10 @@ def publish_to_ftp() -> None:
     :raises EnvironmentError: when the FTP credentials are not given in environment
     """
     # This should only be needed when publishing to FTP (as it's a side feature)
-    from oss4x.app.src.config import (
-        FILE_INPUT_LISTINGS_INDEX,
-        FILE_OUTPUT_LISTING_FEATHER,
-    )
+    from oss4x.app.src.app_config import AppConfig
+    from oss4x.app.src.config import FILE_OUTPUT_LISTING_FEATHER
+
+    app_config = AppConfig()
 
     for v, i in [
         ("EXPORT_FTP_URL", SETTINGS.EXPORT_FTP_URL),
@@ -33,7 +33,7 @@ def publish_to_ftp() -> None:
     files_out = [
         FILE_OUTPUT_SUMMARY_TOML,
         FILE_OUTPUT_LISTING_FEATHER,
-        FILE_INPUT_LISTINGS_INDEX,
+        app_config.FILE_INPUT_LISTINGS_INDEX,
     ]
 
     with FTP(

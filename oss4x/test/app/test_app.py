@@ -1,13 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from oss4x.app import app, mark_test_mode
+from oss4x.app import AppConfig, create_app, mark_test_mode
 from oss4x.app.src.search import typesense_io
 
 
 @pytest.fixture
 def app_test_client(initialised_typesense_client):
     mark_test_mode()
+    app = create_app(AppConfig())
     # Override dependencies
     app.dependency_overrides[typesense_io.generate_client] = lambda: (
         initialised_typesense_client

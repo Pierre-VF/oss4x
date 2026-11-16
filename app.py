@@ -4,11 +4,9 @@ FastAPI app to operate a search
 
 from uvicorn import run
 
-try:
-    from oss4x.app import app
-except ImportError:
-    # For legacy usage compatibility
-    from oss4x.app import app
+from oss4x.app import AppConfig, create_app
+
+app = create_app(AppConfig())
 
 if __name__ == "__main__":
     # For local testing

@@ -2,7 +2,7 @@ from functools import lru_cache
 
 import pandas as pd
 
-from oss4x.app.src.config import FILE_INPUT_LISTINGS_INDEX
+from oss4x.app.src import config
 from oss4x.src.parsers.licences import (
     licence_url_from_licence_name,
 )
@@ -11,7 +11,9 @@ from oss4x.src.parsers.listings import ResourceListing
 
 @lru_cache(maxsize=2)
 def listing_credits_df() -> pd.DataFrame:
-    list_of_listings = ResourceListing.from_json(FILE_INPUT_LISTINGS_INDEX)
+    list_of_listings = ResourceListing.from_json(
+        config.APP_CONFIG.FILE_INPUT_LISTINGS_INDEX
+    )
 
     df = list_of_listings.to_dataframe()
     # Sorting listings by descending number of datasets (and requiring at least 10 targets to be credited)

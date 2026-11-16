@@ -14,9 +14,6 @@ class Settings(pydantic_settings.BaseSettings):
     LOCAL_FOLDER: str = str(Path(__file__).parent.parent.parent.parent / ".data")
     SCRAPING_SQLITE_DB: str = "db.sqlite"
 
-    # Indexes
-    INDEXES_FOLDER: str = "indexes"
-
     # Database
     DATABASE_USERNAME: str | None = None
     DATABASE_PASSWORD: str | None = None
@@ -34,9 +31,6 @@ class Settings(pydantic_settings.BaseSettings):
     # App settings
     DATA_REFRESH_KEY: str | None = None
     SENTRY_DSN_URL: str | None = None
-    APP_URL_BASE: str = ""
-    APP_PROXY_PATH: str | None = None
-    APP_URL_FAVICON: str | None = None
 
     # Typesense settings
     TYPESENSE_API_KEY: str | None = None
@@ -45,9 +39,6 @@ class Settings(pydantic_settings.BaseSettings):
 
     # For data and usage analytics
     UMAMI_SITE_ID: str | None = None
-
-    # Search parameters
-    ENABLE_HYBRID_SEARCH: bool = False
 
     model_config = pydantic_settings.SettingsConfigDict(
         env_file_encoding="utf-8",
@@ -73,18 +64,6 @@ class Settings(pydantic_settings.BaseSettings):
             "port": url.port,
             "protocol": url.scheme,
         }
-
-    @property
-    def full_url_base(self) -> str:
-        """
-        Get the full URL base by combining APP_URL_BASE and APP_PROXY_PATH
-
-        :return: Combined URL base string
-        """
-        if (self.APP_PROXY_PATH is None) or (self.APP_PROXY_PATH == ""):
-            return self.APP_URL_BASE
-        else:
-            return f"{self.APP_URL_BASE}{self.APP_PROXY_PATH}"
 
     @property
     def path_scraping_sqlite_db(self) -> str:

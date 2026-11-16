@@ -4,12 +4,10 @@ from datetime import date
 from functools import lru_cache
 from urllib.request import urlretrieve
 
+from oss4x.app.src import config
 from oss4x.app.src.config import (
-    FILE_INPUT_LISTINGS_INDEX,
     FILE_OUTPUT_DIR,
     FILE_OUTPUT_LISTING_FEATHER,
-    URL_LISTING_FEATHER,
-    URL_LISTINGS_INDEX,
 )
 from oss4x.app.src.search import typesense_io
 from oss4x.src.helpers import sorted_list_of_unique_elements
@@ -28,13 +26,16 @@ def download_file(url: str, target: str, force_refresh: bool = True) -> None:
 def download_listing_data_for_app(
     force_refresh: bool = True, load_feather_listing: bool = True
 ):
+    app_config = config.APP_CONFIG
     os.makedirs(FILE_OUTPUT_DIR, exist_ok=True)
     download_file(
-        URL_LISTINGS_INDEX, FILE_INPUT_LISTINGS_INDEX, force_refresh=force_refresh
+        app_config.URL_LISTINGS_INDEX,
+        app_config.FILE_INPUT_LISTINGS_INDEX,
+        force_refresh=force_refresh,
     )
     if load_feather_listing:
         download_file(
-            URL_LISTING_FEATHER,
+            app_config.URL_LISTING_FEATHER,
             FILE_OUTPUT_LISTING_FEATHER,
             force_refresh=force_refresh,
         )
