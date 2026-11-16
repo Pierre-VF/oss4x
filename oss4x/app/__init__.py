@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from oss4x.app.src import mcp_server
+from oss4x.app.src import config, mcp_server
 from oss4x.app.src.app_config import AppConfig
 from oss4x.app.src.config import (
     FILE_OUTPUT_LISTING_FEATHER,
@@ -43,7 +43,6 @@ def initialise_error_logging():
     if os.environ.get(_ENV_TEST_MODE):
         log_info("Skipping error logging initialisation in test mode")
         return
-    from oss4x.app.src import config
 
     sentry_dsn = config.SETTINGS.SENTRY_DSN_URL
     if sentry_dsn and len(sentry_dsn) > 1:

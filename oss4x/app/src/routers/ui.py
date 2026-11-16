@@ -39,7 +39,7 @@ def _render_ui_template(
         "URL_CODE_REPOSITORY": app_config.URL_CODE_REPOSITORY,
         "URL_FEEDBACK_FORM": app_config.URL_FEEDBACK_FORM,
         "URL_BASE": app_config.full_url_base,
-        "APPLICATION_FIELD": "climate",
+        "APPLICATION_FIELD": app_config.APPLICATION_FIELD,
         "credits_df": listing_credits_df(),
         "canonical_url": canonical_url,
     }

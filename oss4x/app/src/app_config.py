@@ -16,7 +16,7 @@ class AppConfig(BaseSettings):
 
     Combines deployment-facing settings (URLs, feature flags, paths)
     with the theme configuration. Use this to configure the app for
-    a specific application case.
+    a specific application deployment.
     """
 
     model_config = SettingsConfigDict(
@@ -36,6 +36,9 @@ class AppConfig(BaseSettings):
 
     # Feature flags
     ENABLE_HYBRID_SEARCH: bool = False
+
+    # Application metadata
+    APPLICATION_FIELD: str = ""
 
     # Paths
     INDEXES_FOLDER: str = "indexes"
