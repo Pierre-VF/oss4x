@@ -5,12 +5,12 @@ This module provides a centralized configuration for all design colors and theme
 The CSS uses these values through Jinja2 templating to generate CSS variables.
 """
 
-from dataclasses import dataclass, field
 from typing import Any
 
+from pydantic import BaseModel
 
-@dataclass
-class ThemeColors:
+
+class ThemeColors(BaseModel):
     """Color palette for the application theme."""
 
     # Primary colors
@@ -45,8 +45,7 @@ class ThemeColors:
     shadow_large: str = "rgba(0, 0, 0, 0.2)"  # Large shadow
 
 
-@dataclass
-class ThemeTypography:
+class ThemeTypography(BaseModel):
     """Typography settings for the application."""
 
     font_family: str = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
@@ -74,8 +73,7 @@ class ThemeTypography:
     letter_spacing_wide: str = "0.5px"
 
 
-@dataclass
-class ThemeSpacing:
+class ThemeSpacing(BaseModel):
     """Spacing settings for the application."""
 
     # Base unit (in pixels)
@@ -96,8 +94,7 @@ class ThemeSpacing:
     border_radius_full: int = 25  # For pills/buttons
 
 
-@dataclass
-class ThemeShadows:
+class ThemeShadows(BaseModel):
     """Shadow settings for the application."""
 
     sm: str = "0 1px 2px rgba(0, 0, 0, 0.05)"
@@ -106,8 +103,7 @@ class ThemeShadows:
     xl: str = "0 8px 30px rgba(0, 0, 0, 0.2)"
 
 
-@dataclass
-class ThemeTransitions:
+class ThemeTransitions(BaseModel):
     """Transition settings for the application."""
 
     fast: str = "0.15s ease"
@@ -115,22 +111,20 @@ class ThemeTransitions:
     slow: str = "0.5s ease"
 
 
-@dataclass
-class Theme:
+class Theme(BaseModel):
     """Complete theme configuration."""
 
-    colors: ThemeColors = field(default_factory=ThemeColors)
-    typography: ThemeTypography = field(default_factory=ThemeTypography)
-    spacing: ThemeSpacing = field(default_factory=ThemeSpacing)
-    shadows: ThemeShadows = field(default_factory=ThemeShadows)
-    transitions: ThemeTransitions = field(default_factory=ThemeTransitions)
+    colors: ThemeColors = ThemeColors()
+    typography: ThemeTypography = ThemeTypography()
+    spacing: ThemeSpacing = ThemeSpacing()
+    shadows: ThemeShadows = ThemeShadows()
+    transitions: ThemeTransitions = ThemeTransitions()
 
     def to_css_variables(self) -> str:
         """
         Convert the theme configuration to CSS custom properties.
 
-        Returns:
-            str: CSS variable declarations for use in <style> tags or CSS files
+        :return: CSS variable declarations for use in <style> tags or CSS files
         """
         variables = []
 
@@ -195,8 +189,7 @@ class Theme:
         """
         Convert the theme configuration to a dictionary.
 
-        Returns:
-            Dict[str, Any]: Dictionary representation of the theme
+        :return: Dictionary representation of the theme
         """
         return {
             "colors": {
@@ -223,7 +216,3 @@ class Theme:
                 "lg": self.spacing.lg,
             },
         }
-
-
-# Default theme instance
-THEME = Theme()

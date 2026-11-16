@@ -45,16 +45,17 @@ def discover_repositories_in_existing_organisations(output_file: str) -> None:
 def discover_repositories_in_existing_readmes(output_file: str) -> None:
     # Importing locally as that's not an absolute file-level requirement (and the file isn't easily available anymore)
     from oss4x.app.src.config import (
-        FILE_OUTPUT_LISTING_FEATHER,
+        get_file_output_listing_feather,
     )
 
+    feather_path = get_file_output_listing_feather()
     log_info("Searching for relevant resource URLs in READMEs of known repositories")
-    if not os.path.exists(FILE_OUTPUT_LISTING_FEATHER):
+    if not os.path.exists(feather_path):
         raise RuntimeError(
             "The dataset is not available locally - make sure to download it prior to running this"
         )
 
-    dfs = project_dataframe_loader(FILE_OUTPUT_LISTING_FEATHER)
+    dfs = project_dataframe_loader(feather_path)
 
     full_targets = ParsingTargets.from_toml(FILE_INPUT_INDEX)
     for i, r in tqdm(dfs.iterrows()):

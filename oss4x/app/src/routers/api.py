@@ -10,7 +10,7 @@ from importlib.metadata import version
 from fastapi import BackgroundTasks, Depends, FastAPI, Request
 from fastapi.responses import PlainTextResponse, RedirectResponse
 
-from oss4x.app.src.config import URL_CODE_REPOSITORY, URL_LISTING_FEATHER
+from oss4x.app.src import config
 from oss4x.app.src.data_io import (
     clear_cache,
     refresh_data,
@@ -21,7 +21,6 @@ from oss4x.app.src.database import (
 )
 from oss4x.app.src.routers import listing_credits_df
 from oss4x.app.src.search import typesense_io
-from oss4x.src.config import SETTINGS
 from oss4x.src.log import log_info
 
 
@@ -63,7 +62,9 @@ async def search(
 
 @app.get("/code")
 async def api_code():
-    return RedirectResponse(URL_CODE_REPOSITORY, status_code=307)
+    return RedirectResponse(
+        config.get_app_config().URL_CODE_REPOSITORY, status_code=307
+    )
 
 
 @app.get("/data/credits")
@@ -80,15 +81,17 @@ async def data_feather():
     """
     Redirects to the dataset in .feather format (please bear in mind the credit considerations for the source projects, see "credits" endpoint)
     """
-    return RedirectResponse(URL_LISTING_FEATHER, status_code=307)
+    return RedirectResponse(
+        config.get_app_config().URL_LISTING_FEATHER, status_code=307
+    )
 
 
 def _permission_admin(key: str | None = None):
-    if SETTINGS.DATA_REFRESH_KEY is None:
+    if config.SETTINGS.DATA_REFRESH_KEY is None:
         raise ForbiddenError(
             "Not allowed to refresh when passkey is not set",
         )
-    if not secrets.compare_digest(key or "", SETTINGS.DATA_REFRESH_KEY):
+    if not secrets.compare_digest(key or "", config.SETTINGS.DATA_REFRESH_KEY):
         raise ForbiddenError(
             "You are not allowed to refresh the data (invalid key)",
         )

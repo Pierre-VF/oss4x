@@ -11,7 +11,7 @@ from typesense.types.document import (
     SearchParameters,
 )
 
-from oss4x.src.config import SETTINGS
+from oss4x.app.src import config
 from oss4x.src.helpers import split_list_in_list_of_batches
 from oss4x.src.log import log_info, log_warning
 
@@ -84,11 +84,12 @@ _TYPESENSE_REPO_SCHEMA_FIELDS = [
 
 
 def generate_client() -> typesense.Client:
+    settings = config.SETTINGS
     return typesense.Client(
         {
-            "nodes": [SETTINGS.typesense_config],
-            "api_key": SETTINGS.TYPESENSE_API_KEY,
-            "connection_timeout_seconds": SETTINGS.TYPESENSE_CONNECTION_TIMEOUT,
+            "nodes": [settings.typesense_config],
+            "api_key": settings.TYPESENSE_API_KEY,
+            "connection_timeout_seconds": settings.TYPESENSE_CONNECTION_TIMEOUT,
         }
     )
 
@@ -283,7 +284,7 @@ def search_with_query(
     keyword_fields = "name, organisation_id, description, readme"
     keyword_weights = [5, 4, 3, 2]
     hybrid_params: dict[str, str | bool] = {}
-    use_hybrid = SETTINGS.ENABLE_HYBRID_SEARCH
+    use_hybrid = config.get_app_config().ENABLE_HYBRID_SEARCH
     if use_hybrid:
         keyword_fields = f"{keyword_fields}, embedding_readme"
         keyword_weights = [*keyword_weights, 1]

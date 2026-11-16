@@ -15,7 +15,6 @@ from oss4x.src.log import log_info
 mcp = FastMCP(
     "MCP supporting open-source project discovery in the sustainability field.",
 )
-_TS_CLIENT = typesense_io.generate_client()
 
 
 class ProjectDetails(BaseModel):
@@ -52,11 +51,14 @@ class ProjectDetails(BaseModel):
 
 
 @mcp.tool()
-def read_project_details(url: str) -> ProjectDetails:
+def read_project_details(
+    url: str,
+    ts_client=Depends(typesense_io.generate_client),
+) -> ProjectDetails:
     """Provides the details of a project for which the URL is provided.
     This is meant to provide you context about projects from Github, Gitlab, Bitbucket and other Gitx places.
     """
-    res = typesense_io.search_for_url(_TS_CLIENT, url)
+    res = typesense_io.search_for_url(ts_client, url)
     r = [ProjectDetails.from_typesense_item(i) for i in res.results]
     if len(r) < 1:
         log_info(f"[read_project_details] url= {url} [NOT FOUND]")
