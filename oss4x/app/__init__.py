@@ -93,7 +93,7 @@ def create_app(app_config: AppConfig, settings: Settings | None = None) -> FastA
         initialise_error_logging()
 
         # Ensure that context data is available
-        download_listing_data_for_app(force_refresh=False, load_feather_listing=False)
+        download_listing_data_for_app(force_refresh=False)
 
         log_info("Starting app")
         if True:

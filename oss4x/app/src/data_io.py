@@ -24,7 +24,8 @@ def download_file(url: str, target: str, force_refresh: bool = True) -> None:
 
 
 def download_listing_data_for_app(
-    force_refresh: bool = True, load_feather_listing: bool = True
+    force_refresh: bool = True,
+    load_feather_listing: bool = False,
 ):
     app_config = config.APP_CONFIG
     os.makedirs(FILE_OUTPUT_DIR, exist_ok=True)
@@ -34,6 +35,8 @@ def download_listing_data_for_app(
         force_refresh=force_refresh,
     )
     if load_feather_listing:
+        if app_config.URL_LISTING_FEATHER is None:
+            raise RuntimeError("Listing target not set up")
         download_file(
             app_config.URL_LISTING_FEATHER,
             FILE_OUTPUT_LISTING_FEATHER,
@@ -109,6 +112,4 @@ def refresh_data(force_refresh: bool = False):
     """
     if force_refresh:
         log_warning("- Force refresh requested, downloading listings index")
-    download_listing_data_for_app(
-        force_refresh=force_refresh, load_feather_listing=False
-    )
+    download_listing_data_for_app(force_refresh=force_refresh)

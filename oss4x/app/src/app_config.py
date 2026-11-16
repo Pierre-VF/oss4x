@@ -28,10 +28,10 @@ class AppConfig(BaseSettings):
     APP_PROXY_PATH: str | None = None
     APP_URL_FAVICON: str | None = None
     URL_CODE_REPOSITORY: str = "https://github.com/Pierre-VF/oss4x"
-    URL_FEEDBACK_FORM: str = "https://docs.google.com/forms/d/e/1FAIpQLSeei-0V5CobVNX-qOX3lI11FuvTBv1JV77fcUZOideeDtcEhA/viewform?usp=sf_link"
+    URL_FEEDBACK_FORM: str = ""
     URL_LISTINGS_INDEX: str = "https://raw.githubusercontent.com/Pierre-VF/oss4x/refs/heads/main/indexes/listings.json"
-    URL_RAW_INDEX: str = "https://data.pierrevf.com/oss4x/summary.toml"
-    URL_LISTING_FEATHER: str = "https://data.pierrevf.com/oss4x/listing_data.feather"
+    URL_RAW_INDEX: str | None = None
+    URL_LISTING_FEATHER: str | None = None
     FORCE_HTTPS: bool = True
 
     # Feature flags

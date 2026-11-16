@@ -19,6 +19,7 @@ def download_data():
         (app_config.URL_RAW_INDEX, FILE_OUTPUT_SUMMARY_TOML),
         (app_config.URL_LISTING_FEATHER, FILE_OUTPUT_LISTING_FEATHER),
     ]:
-        data_io.download_file(url_i, file_i)
+        if url_i is not None:
+            data_io.download_file(url_i, file_i)
 
     log_info("Download complete")
