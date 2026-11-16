@@ -284,7 +284,7 @@ def search_with_query(
     keyword_fields = "name, organisation_id, description, readme"
     keyword_weights = [5, 4, 3, 2]
     hybrid_params: dict[str, str | bool] = {}
-    use_hybrid = config.APP_CONFIG.ENABLE_HYBRID_SEARCH
+    use_hybrid = config.get_app_config().ENABLE_HYBRID_SEARCH
     if use_hybrid:
         keyword_fields = f"{keyword_fields}, embedding_readme"
         keyword_weights = [*keyword_weights, 1]

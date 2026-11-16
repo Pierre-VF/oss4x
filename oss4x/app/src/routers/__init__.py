@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 import pandas as pd
 
 from oss4x.app.src import config
@@ -9,10 +7,9 @@ from oss4x.src.parsers.licences import (
 from oss4x.src.parsers.listings import ResourceListing
 
 
-@lru_cache(maxsize=2)
 def listing_credits_df() -> pd.DataFrame:
     list_of_listings = ResourceListing.from_json(
-        config.APP_CONFIG.FILE_INPUT_LISTINGS_INDEX
+        config.get_app_config().FILE_INPUT_LISTINGS_INDEX
     )
 
     df = list_of_listings.to_dataframe()

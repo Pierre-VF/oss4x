@@ -11,7 +11,7 @@ templates = Jinja2Templates(directory=str(TEMPLATES_PATH))
 
 
 def render_template(request: Request, template_file: str, content: dict | None = None):
-    theme = config.APP_CONFIG.theme
+    theme = config.get_app_config().theme
     context = {
         "request": request,
         "APP_VERSION": APP_VERSION,

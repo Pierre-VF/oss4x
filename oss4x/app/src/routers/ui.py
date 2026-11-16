@@ -27,7 +27,7 @@ def _render_ui_template(
     template_file: str,
     content: dict | None = None,
 ):
-    app_config = config.APP_CONFIG
+    app_config = config.get_app_config()
     settings = config.SETTINGS
     url = request.url.components
     if app_config.FORCE_HTTPS:

@@ -62,7 +62,9 @@ async def search(
 
 @app.get("/code")
 async def api_code():
-    return RedirectResponse(config.APP_CONFIG.URL_CODE_REPOSITORY, status_code=307)
+    return RedirectResponse(
+        config.get_app_config().URL_CODE_REPOSITORY, status_code=307
+    )
 
 
 @app.get("/data/credits")
@@ -79,7 +81,9 @@ async def data_feather():
     """
     Redirects to the dataset in .feather format (please bear in mind the credit considerations for the source projects, see "credits" endpoint)
     """
-    return RedirectResponse(config.APP_CONFIG.URL_LISTING_FEATHER, status_code=307)
+    return RedirectResponse(
+        config.get_app_config().URL_LISTING_FEATHER, status_code=307
+    )
 
 
 def _permission_admin(key: str | None = None):

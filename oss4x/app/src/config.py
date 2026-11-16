@@ -33,3 +33,10 @@ def set_current_config(app_config: AppConfig, settings: Settings | None = None) 
     global APP_CONFIG, SETTINGS
     APP_CONFIG = app_config
     SETTINGS = settings or _DEFAULT_SETTINGS
+
+
+def get_app_config() -> AppConfig:
+    """Return the current AppConfig, raising a clear error if not yet set."""
+    if APP_CONFIG is None:
+        raise RuntimeError("create_app() has not been called. APP_CONFIG is not set.")
+    return APP_CONFIG

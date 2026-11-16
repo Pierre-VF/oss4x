@@ -27,7 +27,7 @@ def download_listing_data_for_app(
     force_refresh: bool = True,
     load_feather_listing: bool = False,
 ):
-    app_config = config.APP_CONFIG
+    app_config = config.get_app_config()
     os.makedirs(FILE_OUTPUT_DIR, exist_ok=True)
     download_file(
         app_config.URL_LISTINGS_INDEX,
