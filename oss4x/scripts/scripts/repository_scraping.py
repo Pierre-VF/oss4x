@@ -82,7 +82,7 @@ def scrape_all(
     """
     )
 
-    scripts.format_all_files()
+    scripts.format_all_files(files=[FILE_INPUT_INDEX, FILE_OUTPUT_SUMMARY_TOML])
 
     file_failures_toml = f"{FILE_OUTPUT_DIR}/failures_scraping.toml"
     scripts.format_individual_file(file_failures_toml)

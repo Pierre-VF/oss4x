@@ -4,7 +4,7 @@ from datetime import date
 from functools import lru_cache
 from urllib.request import urlretrieve
 
-from oss4x.app.src import config
+from oss4x.app.src.app_config import AppConfig
 from oss4x.app.src.config import (
     get_file_output_dir,
     get_file_output_listing_feather,
@@ -24,10 +24,10 @@ def download_file(url: str, target: str, force_refresh: bool = True) -> None:
 
 
 def download_listing_data_for_app(
+    app_config: AppConfig,
     force_refresh: bool = True,
     load_feather_listing: bool = False,
 ):
-    app_config = config.get_app_config()
     os.makedirs(get_file_output_dir(), exist_ok=True)
     download_file(
         app_config.URL_LISTINGS_INDEX,
@@ -64,7 +64,7 @@ class _RepositoryIndexCharacteristics:
 def repository_index_characteristics_from_documents() -> (
     _RepositoryIndexCharacteristics
 ):
-    # TOODO: generate this better (doesn't get patched in tests) - in a way that works with cache
+    # TODO: generate this better (doesn't get patched in tests) - in a way that works with cache
     ts_client = typesense_io.generate_client()
     licences = typesense_io.list_values(
         ts_client, typesense_io.CountableFieldsEnum.licence
@@ -102,14 +102,17 @@ def clear_cache():
     unique_licence_categories.cache_clear()
 
 
-def refresh_data(force_refresh: bool = False):
+def refresh_data(app_config: AppConfig, force_refresh: bool = False):
     """
     Refresh the data for the app.
 
     Note: The feather file is no longer used as the primary data source.
     The app now reads from the repository database. This function is kept
     for backward compatibility but only downloads the listings index.
+
+    :param app_config: Application configuration containing paths and URLs
+    :param force_refresh: If True, forces download even if cached
     """
     if force_refresh:
         log_warning("- Force refresh requested, downloading listings index")
-    download_listing_data_for_app(force_refresh=force_refresh)
+    download_listing_data_for_app(app_config=app_config, force_refresh=force_refresh)
