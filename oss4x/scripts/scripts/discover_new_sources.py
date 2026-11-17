@@ -21,8 +21,18 @@ from oss4x.src.parsers.git_platforms.github_io import GithubScraper
 
 
 def discover_repositories_in_existing_organisations(
-    output_file: str, input_index: str
+    output_file: str,
+    input_index: str,
 ) -> None:
+    """
+    Discover repositories in existing organisations from the input index.
+
+    Extracts organisation names from existing GitHub repositories and creates
+    a new target list with these organisations for further discovery.
+
+    :param output_file: Path to the output TOML file where extended targets will be saved
+    :param input_index: Path to the input TOML file containing the repository index
+    """
     log_info("Loading organisations and repositories to be indexed")
     targets = ParsingTargets.from_toml(input_index)
 
@@ -45,6 +55,15 @@ def discover_repositories_in_existing_readmes(
     output_file: str,
     input_index: str,
 ) -> None:
+    """
+    Discover repositories by extracting URLs from README files of known repositories.
+
+    Scans README content (Markdown and RST) from the feather dataset to find
+    additional project URLs that should be indexed.
+
+    :param output_file: Path to the output TOML file where extended targets will be saved
+    :param input_index: Path to the input TOML file containing the repository index
+    """
     # Importing locally as that's not an absolute file-level requirement (and the file isn't easily available anymore)
     from oss4x.app.src.config import (
         get_file_output_listing_feather,

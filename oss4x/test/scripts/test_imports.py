@@ -17,8 +17,6 @@ def test_import():
     assert isinstance(scripts.__name__, str)
 
     # Sub-packages
-    assert isinstance(scripts.__name__, str)
-
     assert isinstance(data_publication.__name__, str)
     assert isinstance(discover_new_sources.__name__, str)
     assert isinstance(discover_projects.__name__, str)

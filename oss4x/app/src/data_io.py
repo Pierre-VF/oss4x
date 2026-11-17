@@ -64,7 +64,7 @@ class _RepositoryIndexCharacteristics:
 def repository_index_characteristics_from_documents() -> (
     _RepositoryIndexCharacteristics
 ):
-    # TOODO: generate this better (doesn't get patched in tests) - in a way that works with cache
+    # TODO: generate this better (doesn't get patched in tests) - in a way that works with cache
     ts_client = typesense_io.generate_client()
     licences = typesense_io.list_values(
         ts_client, typesense_io.CountableFieldsEnum.licence
@@ -109,6 +109,9 @@ def refresh_data(app_config: AppConfig, force_refresh: bool = False):
     Note: The feather file is no longer used as the primary data source.
     The app now reads from the repository database. This function is kept
     for backward compatibility but only downloads the listings index.
+
+    :param app_config: Application configuration containing paths and URLs
+    :param force_refresh: If True, forces download even if cached
     """
     if force_refresh:
         log_warning("- Force refresh requested, downloading listings index")

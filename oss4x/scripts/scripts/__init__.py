@@ -5,7 +5,7 @@ Module containing methods to be run in scripts
 import subprocess
 from datetime import timedelta
 
-from oss4x.src.log import log_info
+from oss4x.src.log import log_error, log_info
 from oss4x.src.parsers import (
     ParsingTargets,
     ResourceListing,
@@ -19,11 +19,11 @@ def format_individual_file(file_path: str) -> None:
 
 
 def format_all_files(files: list[str]):
-    for i in files:
+    for file_path in files:
         try:
-            format_individual_file(i)
+            format_individual_file(file_path)
         except Exception as e:
-            log_info(f"Failed to reprocess the file {i} : {e}")
+            log_error(f"Failed to reprocess the file {file_path} : {e}")
 
 
 def _add_projects_to_listing_file(
