@@ -1,4 +1,3 @@
-from oss4x.scripts import cli
 from oss4x.scripts.scripts import (
     data_publication,
     discover_new_sources,
@@ -18,7 +17,6 @@ def test_import():
     assert isinstance(scripts.__name__, str)
 
     # Sub-packages
-    assert isinstance(cli.__name__, str)
     assert isinstance(scripts.__name__, str)
 
     assert isinstance(data_publication.__name__, str)

@@ -5,11 +5,6 @@ Module containing methods to be run in scripts
 import subprocess
 from datetime import timedelta
 
-from oss4x.scripts.src.config import (
-    FILE_INPUT_INDEX,
-    FILE_INPUT_LISTINGS_INDEX,
-    FILE_OUTPUT_SUMMARY_TOML,
-)
 from oss4x.src.log import log_info
 from oss4x.src.parsers import (
     ParsingTargets,
@@ -23,20 +18,17 @@ def format_individual_file(file_path: str) -> None:
     subprocess.run(["black", str(file_path)], check=True)
 
 
-def format_all_files():
-    try:
-        format_individual_file(FILE_INPUT_INDEX)
-    except Exception as e:
-        log_info(f"Failed to reprocess the index : {e}")
-    try:
-        format_individual_file(FILE_OUTPUT_SUMMARY_TOML)
-    except Exception as e:
-        log_info(f"Failed to reprocess the summary : {e}")
+def format_all_files(files: list[str]):
+    for i in files:
+        try:
+            format_individual_file(i)
+        except Exception as e:
+            log_info(f"Failed to reprocess the file {i} : {e}")
 
 
 def _add_projects_to_listing_file(
     parsing_targets: ParsingTargets,
-    file_path: str = FILE_INPUT_INDEX,
+    file_path: str,
 ) -> None:
     log_info(f"Adding projects to {file_path}")
     existing_targets = ParsingTargets.from_toml(file_path)
@@ -61,8 +53,8 @@ def _add_projects_to_listing_file(
 
 
 def discover_projects(
-    file_path: str = FILE_INPUT_INDEX,
-    listings_file_path: str = FILE_INPUT_LISTINGS_INDEX,
+    file_path: str,
+    listings_file_path: str,
     cache_lifetime: timedelta | None = None,
 ):
     log_info("Indexing LF Energy projects")
@@ -84,12 +76,12 @@ def discover_projects(
 
 def add_projects_to_listing(
     project_urls: list[str],
-    file_path: str = FILE_INPUT_INDEX,
+    file_path: str,
 ) -> None:
     """Adds projects from a list into the index file
 
     :param project_urls: list of URLs to be added
-    :param file_path: TOML file link to be updated, defaults to FILE_INPUT_INDEX
+    :param file_path: TOML file link to be updated
     """
     # Splitting URLs into targets
     new_targets = identify_parsing_targets(project_urls)
@@ -102,7 +94,7 @@ def add_projects_to_listing(
 
 
 def update_listing_of_listings(
-    target_output_file: str = FILE_INPUT_LISTINGS_INDEX,
+    target_output_file: str,
 ) -> None:
     list_of_listings = ResourceListing.from_json(target_output_file)
 

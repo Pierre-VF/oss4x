@@ -6,9 +6,6 @@ import os
 
 from tqdm import tqdm
 
-from oss4x.scripts.src.config import (
-    FILE_INPUT_INDEX,
-)
 from oss4x.src.database.projects import project_dataframe_loader
 from oss4x.src.log import (
     log_info,
@@ -23,9 +20,11 @@ from oss4x.src.parsers import (
 from oss4x.src.parsers.git_platforms.github_io import GithubScraper
 
 
-def discover_repositories_in_existing_organisations(output_file: str) -> None:
+def discover_repositories_in_existing_organisations(
+    output_file: str, input_index: str
+) -> None:
     log_info("Loading organisations and repositories to be indexed")
-    targets = ParsingTargets.from_toml(FILE_INPUT_INDEX)
+    targets = ParsingTargets.from_toml(input_index)
 
     # Extract organisation to screen for new repositories
     ghs = GithubScraper()
@@ -42,7 +41,10 @@ def discover_repositories_in_existing_organisations(output_file: str) -> None:
     extended_targets.to_toml(output_file)
 
 
-def discover_repositories_in_existing_readmes(output_file: str) -> None:
+def discover_repositories_in_existing_readmes(
+    output_file: str,
+    input_index: str,
+) -> None:
     # Importing locally as that's not an absolute file-level requirement (and the file isn't easily available anymore)
     from oss4x.app.src.config import (
         get_file_output_listing_feather,
@@ -57,7 +59,7 @@ def discover_repositories_in_existing_readmes(output_file: str) -> None:
 
     dfs = project_dataframe_loader(feather_path)
 
-    full_targets = ParsingTargets.from_toml(FILE_INPUT_INDEX)
+    full_targets = ParsingTargets.from_toml(input_index)
     for i, r in tqdm(dfs.iterrows()):
         try:
             if isinstance(r["readme"], str):

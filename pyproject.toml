@@ -77,12 +77,3 @@ filterwarnings = [
     "ignore:SyncOverrides is deprecated:DeprecationWarning",
     "ignore:SyncSynonyms is deprecated:DeprecationWarning",
 ]
-
-# scripts
-[project.scripts]
-add = "oss4x.scripts.cli:add"
-discover = "oss4x.scripts.cli:discover"
-# download_data = "oss4x.scripts.cli:download_data"
-format = "oss4x.scripts.cli:format"
-generate_listing = "oss4x.scripts.cli:generate_listing"
-publish = "oss4x.scripts.cli:publish"
