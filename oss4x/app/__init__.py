@@ -97,7 +97,7 @@ def create_app(
         initialise_error_logging()
 
         # Ensure that context data is available
-        download_listing_data_for_app(force_refresh=False)
+        download_listing_data_for_app(app_config=app_config, force_refresh=False)
 
         log_info("Starting app")
         if True:

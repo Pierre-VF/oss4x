@@ -107,7 +107,8 @@ async def _refresh_data(key: str | None = None):
             status_code=403,
         )
     log_info("DATA refreshing START")
-    refresh_data(force_refresh=True)
+    app_config = config.get_app_config()
+    refresh_data(app_config=app_config, force_refresh=True)
     clear_cache()
     log_info("DATA refreshing END")
     return PlainTextResponse("Data was successfully refreshed")
