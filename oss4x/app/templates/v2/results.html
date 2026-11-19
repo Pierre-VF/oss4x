@@ -23,9 +23,9 @@
         {# Search Again Form #}
         <div class="search-again">
             <h3>🔎 Search again</h3>
-            <form id="search_again_form" method="get" action="results">
+            <form id="search_again_form" method="get" action="results" role="search">
                 <div class="search-container">
-                    <input type="text" id="query" name="query" placeholder="Search repositories..." value="{{ query if query else '' }}" autocomplete="off">
+                    <input type="text" id="query" name="query" placeholder="Search repositories..." value="{{ query if query else '' }}" autocomplete="off" aria-label="Search repositories">
                     <button type="submit" class="search_button" data-umami-event="search-click">Search</button>
                 </div>
                 <input type="hidden" name="licence_category" value="{{ request.query_params.get('licence_category', '*') }}">

@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search engine for open-source code in {{ APPLICATION_FIELD }} applications, built on community-curated open data.">
+    <meta name="theme-color" content="{{ THEME.colors.primary }}">
     <title>
         {% block title %}
             OSS4x - Open-source search for {{ APPLICATION_FIELD }} applications
         {% endblock %}
     </title>
+    {% if APP_URL_FAVICON %}
+    <link rel="icon" href="{{ APP_URL_FAVICON }}">
+    {% endif %}
     <link href="{{ URL_BASE }}/static/css/styles-v2.css?version={{ APP_VERSION }}" rel="stylesheet">
     {% if UMAMI_SITE_ID != "" %}
         <script defer src="https://cloud.umami.is/script.js" data-website-id="{{ UMAMI_SITE_ID }}"></script>
@@ -23,9 +28,12 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-hint" onclick="toggleNav()">☰</div>
-        <div class="nav-links" id="navLinks">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header>
+        <nav class="navbar" aria-label="Main navigation">
+            <a class="nav-brand" href="/ui/search">OSS4x</a>
+            <button class="nav-hint" type="button" onclick="toggleNav()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">☰</button>
+            <div class="nav-links" id="navLinks">
             <a href="/ui/search">Search</a>
             <a href="/ui/about">About</a>
             <a href="/ui/privacy">Privacy</a>
@@ -37,16 +45,43 @@
                 </svg>
             </a>
             <a href="../api/docs">API</a>
-        </div>
-    </nav>
+            </div>
+        </nav>
+    </header>
 
-    {% block content %}
-    {% endblock %}
+    <main id="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p class="footer-credits">
+                Built on open data contributed by communities and individuals — see the
+                {% if URL_LISTINGS_INDEX %}
+                <a href="{{ URL_LISTINGS_INDEX }}" target="_blank" rel="noopener">list of data sources and their licences</a>.
+                {% else %}
+                list of data sources and their licences.
+                {% endif %}
+            </p>
+            <p class="footer-links">
+                <a href="{{ URL_CODE_REPOSITORY }}" target="_blank" rel="noopener">Source code</a>
+                {% if URL_FEEDBACK_FORM %}
+                <a href="{{ URL_FEEDBACK_FORM }}" target="_blank" rel="noopener">Feedback</a>
+                {% endif %}
+                <a href="/ui/about">About</a>
+                <a href="/ui/privacy">Privacy</a>
+            </p>
+        </div>
+    </footer>
 
     <script>
         function toggleNav() {
             const navLinks = document.getElementById('navLinks');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            const navHint = document.querySelector('.nav-hint');
+            const willOpen = navLinks.style.display !== 'flex';
+            navLinks.style.display = willOpen ? 'flex' : 'none';
+            navHint.setAttribute('aria-expanded', String(willOpen));
         }
     </script>
 </body>
