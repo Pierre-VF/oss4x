@@ -38,6 +38,8 @@ def _render_ui_template(
         "UMAMI_SITE_ID": settings.UMAMI_SITE_ID if settings.UMAMI_SITE_ID else "",
         "URL_CODE_REPOSITORY": app_config.URL_CODE_REPOSITORY,
         "URL_FEEDBACK_FORM": app_config.URL_FEEDBACK_FORM,
+        "URL_LISTINGS_INDEX": app_config.URL_LISTINGS_INDEX,
+        "APP_URL_FAVICON": app_config.APP_URL_FAVICON,
         "URL_BASE": app_config.full_url_base,
         "APPLICATION_FIELD": app_config.APPLICATION_FIELD,
         "credits_df": listing_credits_df(),
